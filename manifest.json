@@ -1,0 +1,10 @@
+{
+  "name": "MotoJá",
+  "short_name": "MotoJá",
+  "description": "Protótipo de corridas de moto",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#111827",
+  "lang": "pt-BR"
+}
