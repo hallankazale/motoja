@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="Protótipo do aplicativo MotoJá para corridas de moto." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>MotoJá</title>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="phone" aria-label="Protótipo MotoJá">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Boa tarde</p>
+          <h1>MotoJá</h1>
+        </div>
+        <button class="icon-button" aria-label="Abrir perfil">👤</button>
+      </header>
+
+      <section class="map-card" aria-label="Mapa ilustrativo">
+        <div class="road road-one"></div>
+        <div class="road road-two"></div>
+        <div class="road road-three"></div>
+        <div class="map-label label-one">Centro</div>
+        <div class="map-label label-two">Itinga</div>
+        <div id="driverMarker" class="driver-marker" aria-label="Motociclista">🏍️</div>
+        <div class="user-marker" aria-label="Sua localização">●</div>
+      </section>
+
+      <section id="requestPanel" class="panel active">
+        <div class="drag-handle"></div>
+        <h2>Para onde vamos?</h2>
+
+        <label class="field">
+          <span class="field-dot origin"></span>
+          <input id="origin" type="text" value="Minha localização" aria-label="Local de partida" />
+        </label>
+
+        <label class="field">
+          <span class="field-dot destination"></span>
+          <input id="destination" type="text" placeholder="Digite o destino" aria-label="Destino" />
+        </label>
+
+        <div class="quick-places">
+          <button data-place="Centro de Araquari">📍 Centro</button>
+          <button data-place="Terminal de Itinga">🚌 Terminal</button>
+          <button data-place="Hospital São José">🏥 Hospital</button>
+        </div>
+
+        <article class="ride-option selected">
+          <div class="ride-icon">🏍️</div>
+          <div class="ride-copy">
+            <strong>Moto Econômica</strong>
+            <span>Chegada estimada em 4 min</span>
+          </div>
+          <strong id="price">R$ 8,50</strong>
+        </article>
+
+        <button id="requestRide" class="primary-button">Solicitar Moto</button>
+      </section>
+
+      <section id="searchPanel" class="panel" aria-live="polite">
+        <div class="drag-handle"></div>
+        <div class="loading-ring"></div>
+        <h2>Procurando motociclista...</h2>
+        <p>Buscando parceiros próximos da sua localização.</p>
+        <button id="cancelSearch" class="secondary-button">Cancelar busca</button>
+      </section>
+
+      <section id="driverPanel" class="panel">
+        <div class="drag-handle"></div>
+        <div class="driver-card">
+          <div class="avatar">H</div>
+          <div>
+            <p class="eyebrow">Seu motociclista chegou</p>
+            <h2>Hallan</h2>
+            <p>⭐ 4,9 · Honda CG 160 preta</p>
+            <strong>Placa QYZ-4A21</strong>
+          </div>
+        </div>
+
+        <div class="security-code">
+          <span>Código para iniciar</span>
+          <strong>4821</strong>
+        </div>
+
+        <div class="actions-row">
+          <button aria-label="Ligar para motociclista">📞 Ligar</button>
+          <button aria-label="Enviar mensagem">💬 Mensagem</button>
+          <button id="startRide" class="start-button">Iniciar</button>
+        </div>
+      </section>
+
+      <section id="ridePanel" class="panel">
+        <div class="drag-handle"></div>
+        <p class="eyebrow">Corrida em andamento</p>
+        <h2 id="rideDestination">Destino</h2>
+        <div class="progress-track"><span></span></div>
+        <div class="trip-stats">
+          <div><strong>7 min</strong><span>tempo</span></div>
+          <div><strong>3,8 km</strong><span>distância</span></div>
+          <div><strong id="ridePrice">R$ 8,50</strong><span>estimativa</span></div>
+        </div>
+        <button id="finishRide" class="primary-button danger">Finalizar demonstração</button>
+      </section>
+
+      <section id="completedPanel" class="panel">
+        <div class="drag-handle"></div>
+        <div class="success-icon">✓</div>
+        <h2>Corrida finalizada!</h2>
+        <p>Esta foi uma simulação. Nenhum pagamento foi realizado.</p>
+        <div class="rating" aria-label="Avaliação">
+          <button>★</button><button>★</button><button>★</button><button>★</button><button>★</button>
+        </div>
+        <button id="newRide" class="primary-button">Nova corrida</button>
+      </section>
+
+      <nav class="bottom-nav" aria-label="Navegação principal">
+        <button class="nav-active">⌂<span>Início</span></button>
+        <button>◷<span>Corridas</span></button>
+        <button>☰<span>Menu</span></button>
+      </nav>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
