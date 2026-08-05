@@ -4,128 +4,107 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#111827" />
-  <meta name="description" content="Protótipo do aplicativo MotoJá para corridas de moto." />
+  <meta name="description" content="MotoJá Campo Verde - corridas de moto." />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
-  <title>MotoJá</title>
+  <title>MotoJá Campo Verde</title>
 </head>
 <body>
   <main class="app-shell">
-    <section class="phone" aria-label="Protótipo MotoJá">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Boa tarde</p>
-          <h1>MotoJá</h1>
-        </div>
-        <button class="icon-button" aria-label="Abrir perfil">👤</button>
+    <section class="phone">
+      <header class="topbar static-topbar">
+        <div><p class="eyebrow">Campo Verde · MT</p><h1>MotoJá</h1></div>
+        <button id="logoutButton" class="icon-button hidden" aria-label="Sair">↪</button>
       </header>
 
-      <section class="map-card" aria-label="Mapa ilustrativo">
-        <div class="road road-one"></div>
-        <div class="road road-two"></div>
-        <div class="road road-three"></div>
-        <div class="map-label label-one">Centro</div>
-        <div class="map-label label-two">Itinga</div>
-        <div id="driverMarker" class="driver-marker" aria-label="Motociclista">🏍️</div>
-        <div class="user-marker" aria-label="Sua localização">●</div>
-      </section>
-
-      <section id="requestPanel" class="panel active">
-        <div class="drag-handle"></div>
-        <h2>Para onde vamos?</h2>
-
-        <label class="field">
-          <span class="field-dot origin"></span>
-          <input id="origin" type="text" value="Minha localização" aria-label="Local de partida" />
-        </label>
-
-        <label class="field">
-          <span class="field-dot destination"></span>
-          <input id="destination" type="text" placeholder="Digite o destino" aria-label="Destino" />
-        </label>
-
-        <div class="quick-places">
-          <button data-place="Centro de Araquari">📍 Centro</button>
-          <button data-place="Terminal de Itinga">🚌 Terminal</button>
-          <button data-place="Hospital São José">🏥 Hospital</button>
+      <section id="authView" class="screen active-screen">
+        <div class="hero-card">
+          <span class="hero-icon">🏍️</span>
+          <h2>Corrida rápida e local</h2>
+          <p>Entre ou crie uma conta para participar do piloto do MotoJá.</p>
         </div>
 
-        <article class="ride-option selected">
-          <div class="ride-icon">🏍️</div>
-          <div class="ride-copy">
-            <strong>Moto Econômica</strong>
-            <span>Chegada estimada em 4 min</span>
+        <div class="auth-tabs">
+          <button id="showLogin" class="tab active">Entrar</button>
+          <button id="showSignup" class="tab">Criar conta</button>
+        </div>
+
+        <form id="loginForm" class="form-card">
+          <label>E-mail<input id="loginEmail" type="email" required autocomplete="email"></label>
+          <label>Senha<input id="loginPassword" type="password" required minlength="6" autocomplete="current-password"></label>
+          <button class="primary-button" type="submit">Entrar</button>
+        </form>
+
+        <form id="signupForm" class="form-card hidden">
+          <label>Nome completo<input id="signupName" type="text" required minlength="2" maxlength="100"></label>
+          <label>Telefone<input id="signupPhone" type="tel" placeholder="(66) 99999-9999"></label>
+          <label>E-mail<input id="signupEmail" type="email" required autocomplete="email"></label>
+          <label>Senha<input id="signupPassword" type="password" required minlength="6" autocomplete="new-password"></label>
+          <label>Tipo de conta
+            <select id="signupRole">
+              <option value="passenger">Passageiro</option>
+              <option value="driver">Motociclista</option>
+            </select>
+          </label>
+          <button class="primary-button" type="submit">Criar conta</button>
+        </form>
+        <p id="authMessage" class="message" aria-live="polite"></p>
+      </section>
+
+      <section id="appView" class="screen">
+        <div id="accountBanner" class="status-banner"></div>
+
+        <section id="passengerView" class="role-view hidden">
+          <div class="map-card compact-map"><div class="user-marker">●</div><div class="driver-marker">🏍️</div><span class="map-city">Campo Verde</span></div>
+          <div class="panel-card">
+            <h2>Solicitar corrida</h2>
+            <form id="rideForm">
+              <label>Origem<input id="pickupAddress" value="Minha localização" required></label>
+              <label>Destino<input id="destinationAddress" placeholder="Digite o destino" required></label>
+              <label>Distância estimada (km)<input id="distanceKm" type="number" min="0.1" max="300" step="0.1" value="3" required></label>
+              <div class="payment-grid">
+                <label><input type="radio" name="paymentMethod" value="pix" checked> PIX</label>
+                <label><input type="radio" name="paymentMethod" value="cash"> Dinheiro</label>
+              </div>
+              <div class="price-box"><span>Estimativa</span><strong id="fareEstimate">R$ 0,00</strong></div>
+              <button id="requestRideButton" class="primary-button" type="submit">Solicitar Moto</button>
+            </form>
           </div>
-          <strong id="price">R$ 8,50</strong>
-        </article>
+          <div class="panel-card"><h3>Minhas corridas</h3><div id="passengerRides" class="list"></div></div>
+        </section>
 
-        <button id="requestRide" class="primary-button">Solicitar Moto</button>
-      </section>
-
-      <section id="searchPanel" class="panel" aria-live="polite">
-        <div class="drag-handle"></div>
-        <div class="loading-ring"></div>
-        <h2>Procurando motociclista...</h2>
-        <p>Buscando parceiros próximos da sua localização.</p>
-        <button id="cancelSearch" class="secondary-button">Cancelar busca</button>
-      </section>
-
-      <section id="driverPanel" class="panel">
-        <div class="drag-handle"></div>
-        <div class="driver-card">
-          <div class="avatar">H</div>
-          <div>
-            <p class="eyebrow">Seu motociclista chegou</p>
-            <h2>Hallan</h2>
-            <p>⭐ 4,9 · Honda CG 160 preta</p>
-            <strong>Placa QYZ-4A21</strong>
+        <section id="driverView" class="role-view hidden">
+          <div class="panel-card">
+            <h2>Área do motociclista</h2>
+            <p id="driverApprovalText"></p>
+            <label class="switch-row">Disponível para corridas <input id="onlineToggle" type="checkbox"></label>
           </div>
-        </div>
+          <form id="driverSetupForm" class="panel-card">
+            <h3>Dados para aprovação</h3>
+            <label>Chave PIX<input id="pixKey" required></label>
+            <label>Modelo da moto<input id="vehicleModel" placeholder="Honda CG 160" required></label>
+            <label>Cor<input id="vehicleColor" required></label>
+            <label>Placa<input id="vehiclePlate" required maxlength="8"></label>
+            <label>Ano<input id="vehicleYear" type="number" min="1990" max="2100"></label>
+            <button class="primary-button" type="submit">Salvar cadastro</button>
+          </form>
+          <div class="panel-card"><h3>Corridas disponíveis</h3><div id="openRides" class="list"></div></div>
+          <div class="panel-card"><h3>Minhas corridas</h3><div id="driverRides" class="list"></div></div>
+        </section>
 
-        <div class="security-code">
-          <span>Código para iniciar</span>
-          <strong>4821</strong>
-        </div>
+        <section id="adminView" class="role-view hidden">
+          <div class="panel-card"><h2>Painel do Hallan</h2><p>Aprovação de motociclistas e acompanhamento do piloto.</p></div>
+          <div class="panel-card"><h3>Motociclistas</h3><div id="adminDrivers" class="list"></div></div>
+          <div class="panel-card"><h3>Corridas recentes</h3><div id="adminRides" class="list"></div></div>
+        </section>
 
-        <div class="actions-row">
-          <button aria-label="Ligar para motociclista">📞 Ligar</button>
-          <button aria-label="Enviar mensagem">💬 Mensagem</button>
-          <button id="startRide" class="start-button">Iniciar</button>
-        </div>
+        <p id="appMessage" class="message" aria-live="polite"></p>
       </section>
-
-      <section id="ridePanel" class="panel">
-        <div class="drag-handle"></div>
-        <p class="eyebrow">Corrida em andamento</p>
-        <h2 id="rideDestination">Destino</h2>
-        <div class="progress-track"><span></span></div>
-        <div class="trip-stats">
-          <div><strong>7 min</strong><span>tempo</span></div>
-          <div><strong>3,8 km</strong><span>distância</span></div>
-          <div><strong id="ridePrice">R$ 8,50</strong><span>estimativa</span></div>
-        </div>
-        <button id="finishRide" class="primary-button danger">Finalizar demonstração</button>
-      </section>
-
-      <section id="completedPanel" class="panel">
-        <div class="drag-handle"></div>
-        <div class="success-icon">✓</div>
-        <h2>Corrida finalizada!</h2>
-        <p>Esta foi uma simulação. Nenhum pagamento foi realizado.</p>
-        <div class="rating" aria-label="Avaliação">
-          <button>★</button><button>★</button><button>★</button><button>★</button><button>★</button>
-        </div>
-        <button id="newRide" class="primary-button">Nova corrida</button>
-      </section>
-
-      <nav class="bottom-nav" aria-label="Navegação principal">
-        <button class="nav-active">⌂<span>Início</span></button>
-        <button>◷<span>Corridas</span></button>
-        <button>☰<span>Menu</span></button>
-      </nav>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script src="app.js" defer></script>
 </body>
 </html>
