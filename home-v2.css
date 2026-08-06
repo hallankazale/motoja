@@ -1,0 +1,64 @@
+:root{
+  --mj-primary:#16a34a;
+  --mj-primary-strong:#15803d;
+  --mj-primary-soft:#dcfce7;
+  --mj-ink:#101828;
+  --mj-muted:#667085;
+  --mj-surface:#ffffff;
+  --mj-canvas:#f4f7f5;
+  --mj-border:#e4e7ec;
+  --mj-danger:#dc2626;
+  --mj-blue:#2563eb;
+  --mj-radius-xl:28px;
+  --mj-shadow:0 18px 50px rgba(16,24,40,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--mj-canvas);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--mj-ink)}
+body{overscroll-behavior:none}
+.app-shell{min-height:100dvh;padding:0;background:var(--mj-canvas)}
+.phone{width:100%;max-width:none;min-height:100dvh;margin:0;background:var(--mj-canvas);border-radius:0;box-shadow:none;overflow:hidden}
+.topbar{position:fixed;z-index:1200;top:0;left:0;right:0;height:calc(70px + env(safe-area-inset-top));padding:calc(12px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.88));backdrop-filter:blur(18px);border-bottom:1px solid rgba(228,231,236,.85)}
+.topbar>div{display:flex;align-items:center;gap:10px}.topbar .eyebrow{display:none}.topbar h1{margin:0;font-size:24px;letter-spacing:-.8px}.topbar h1::before{content:"M";display:inline-grid;place-items:center;width:36px;height:36px;margin-right:9px;border-radius:12px;background:linear-gradient(135deg,var(--mj-primary),#22c55e);color:#fff;font-size:20px;font-weight:900;box-shadow:0 8px 20px rgba(22,163,74,.3)}
+.icon-button{width:44px;height:44px;border:0;border-radius:15px;background:#fff;color:var(--mj-ink);box-shadow:0 6px 18px rgba(16,24,40,.12);font-size:20px}
+.screen{padding-top:calc(70px + env(safe-area-inset-top));min-height:100dvh}
+#appView{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+#accountBanner{position:fixed;z-index:1150;top:calc(77px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);padding:8px 14px;border-radius:999px;background:rgba(16,24,40,.84);color:#fff;font-size:12px;font-weight:800;box-shadow:0 10px 24px rgba(16,24,40,.16);backdrop-filter:blur(12px)}
+
+/* Passageiro: mapa dominante */
+#passengerView{position:relative;min-height:calc(100dvh - 70px);padding:0;background:#dfe8e2;overflow:hidden}
+#passengerView #rideMap{position:fixed;z-index:1;inset:calc(70px + env(safe-area-inset-top)) 0 calc(72px + env(safe-area-inset-bottom)) 0;height:auto!important;min-height:0!important;border:0!important;border-radius:0!important;margin:0!important}
+#passengerView .leaflet-control-zoom{margin-top:74px!important}
+#passengerActiveRide{position:fixed;z-index:850;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));max-height:48dvh;overflow:auto;margin:0;border-radius:26px;box-shadow:var(--mj-shadow)}
+#passengerRequestCard{position:fixed;z-index:820;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));margin:0;padding:10px 16px 18px;border:0;border-radius:30px;background:rgba(255,255,255,.97);box-shadow:0 -10px 36px rgba(16,24,40,.18);backdrop-filter:blur(18px);max-height:44dvh;overflow:auto}
+#passengerRequestCard::before{content:"";display:block;width:46px;height:5px;margin:0 auto 13px;border-radius:999px;background:#d0d5dd}
+#passengerRequestCard h2{margin:0 0 14px;font-size:23px;letter-spacing:-.5px}
+#rideForm{display:grid;gap:11px}
+#rideForm label{font-size:12px;font-weight:800;color:var(--mj-muted)}
+#rideForm input,#rideForm select{width:100%;min-height:50px;border:1px solid var(--mj-border);border-radius:17px;background:#f9fafb;padding:13px 15px;font-size:15px;color:var(--mj-ink);outline:none}
+#rideForm input:focus{border-color:var(--mj-primary);box-shadow:0 0 0 4px rgba(22,163,74,.12);background:#fff}
+.location-field{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:end}.location-button{width:52px;height:52px;border:0;border-radius:17px;background:var(--mj-primary-soft);color:var(--mj-primary-strong);font-size:23px;font-weight:900}
+.helper-text{margin:-4px 2px 0;font-size:11px;line-height:1.4;color:var(--mj-muted)}
+#rideForm>label:has(#distanceKm),#routeStatus{display:none}
+.payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.payment-grid label{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border:1px solid var(--mj-border);border-radius:15px;background:#fff;color:var(--mj-ink)!important}.payment-grid input{width:auto!important;min-height:auto!important}
+.price-box{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:17px;background:#f0fdf4}.price-box span{font-size:12px;font-weight:800;color:var(--mj-muted)}.price-box strong{font-size:24px;color:var(--mj-primary-strong)}
+#requestRideButton{min-height:56px;border:0;border-radius:18px;background:linear-gradient(135deg,var(--mj-primary),#22c55e);color:#fff;font-size:17px;font-weight:900;box-shadow:0 12px 24px rgba(22,163,74,.28)}
+#requestRideButton:disabled{opacity:.45;box-shadow:none}
+#passengerView>.panel-card:last-of-type{display:none}
+.suggestions{border-radius:18px!important;box-shadow:0 16px 36px rgba(16,24,40,.18)!important}
+
+/* Navegação inferior */
+.mj-bottom-nav{position:fixed;z-index:1250;left:0;right:0;bottom:0;height:calc(72px + env(safe-area-inset-bottom));padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:rgba(255,255,255,.97);border-top:1px solid var(--mj-border);backdrop-filter:blur(18px)}
+.mj-bottom-nav button{border:0;background:transparent;border-radius:14px;display:grid;place-items:center;gap:3px;color:var(--mj-muted);font-size:11px;font-weight:800;min-width:0}.mj-bottom-nav button span:first-child{font-size:21px}.mj-bottom-nav button.active{background:var(--mj-primary-soft);color:var(--mj-primary-strong)}
+.mj-top-actions{display:flex;align-items:center;gap:8px}.mj-top-action{width:44px;height:44px;border:0;border-radius:15px;background:#fff;box-shadow:0 6px 18px rgba(16,24,40,.12);font-size:18px;color:var(--mj-ink)}
+
+/* Login novo */
+#authView{padding:calc(88px + env(safe-area-inset-top)) 20px 34px;background:radial-gradient(circle at 50% 0,#dcfce7 0,#f7faf8 42%,#fff 100%)}
+#authView .hero-card{margin:0 auto 22px;max-width:440px;border:0;background:transparent;box-shadow:none;text-align:center;padding:20px 6px}
+#authView .hero-icon{display:grid;place-items:center;width:78px;height:78px;margin:0 auto 18px;border-radius:26px;background:linear-gradient(135deg,var(--mj-primary),#22c55e);color:#fff;font-size:38px;box-shadow:0 20px 45px rgba(22,163,74,.3)}
+#authView .hero-card h2{font-size:31px;letter-spacing:-1px;margin:0 0 8px}#authView .hero-card p{color:var(--mj-muted);font-size:15px;margin:0}
+.auth-tabs{max-width:440px;margin:0 auto 12px;padding:5px;border-radius:17px;background:#eef2f0}.auth-tabs .tab{min-height:44px;border-radius:13px;font-weight:900}.auth-tabs .tab.active{background:#fff;color:var(--mj-primary-strong);box-shadow:0 5px 14px rgba(16,24,40,.08)}
+#authView .form-card{max-width:440px;margin:0 auto;border:1px solid rgba(228,231,236,.8);border-radius:26px;background:rgba(255,255,255,.94);box-shadow:0 20px 50px rgba(16,24,40,.1);padding:20px}
+#authView .form-card label{font-size:12px;font-weight:800;color:var(--mj-muted)}#authView .form-card input,#authView .form-card select{min-height:52px;border-radius:16px;border:1px solid var(--mj-border);background:#f9fafb;padding:14px;font-size:15px}
+#authView .primary-button{min-height:54px;border:0;border-radius:17px;background:linear-gradient(135deg,var(--mj-primary),#22c55e);font-weight:900;font-size:16px}
+
+@media(min-width:768px){.phone{max-width:480px;margin:0 auto;min-height:100dvh;box-shadow:0 0 0 1px var(--mj-border),0 24px 70px rgba(16,24,40,.16)}.topbar,.mj-bottom-nav{left:50%;right:auto;width:480px;transform:translateX(-50%)}#passengerView #rideMap{left:50%;right:auto;width:480px;transform:translateX(-50%)}#passengerRequestCard,#passengerActiveRide{left:50%;right:auto;width:456px;transform:translateX(-50%)}}
