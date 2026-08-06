@@ -31,9 +31,24 @@
     .mj-splash__tagline{margin:0;font-size:14px;font-weight:750;letter-spacing:.02em;color:rgba(255,255,255,.94)}
     .mj-splash__loader{position:absolute;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));width:54px;height:4px;border-radius:999px;background:rgba(255,255,255,.36);transform:translateX(-50%);overflow:hidden}
     .mj-splash__loader::after{content:"";display:block;width:48%;height:100%;border-radius:inherit;background:#fff;animation:mjLoader 1.25s ease-in-out infinite}
+
+    .mj-welcome{position:fixed;inset:0;z-index:99990;display:flex;flex-direction:column;overflow:hidden;background:#090d14;color:#f8fafc;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s ease,visibility .35s ease}
+    .mj-welcome.is-visible{opacity:1;visibility:visible;pointer-events:auto}
+    .mj-welcome.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+    .mj-welcome__glow{position:absolute;border-radius:50%;filter:blur(24px);pointer-events:none}.mj-welcome__glow--blue{width:280px;height:280px;right:-120px;top:-80px;background:rgba(15,140,255,.24)}.mj-welcome__glow--green{width:260px;height:260px;left:-140px;bottom:80px;background:rgba(32,216,160,.17)}
+    .mj-welcome__inner{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100%;padding:calc(28px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));max-width:520px;width:100%;margin:auto}
+    .mj-welcome__brand{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:900;letter-spacing:-.04em}.mj-welcome__brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,#0f8cff,#20d8a0);box-shadow:0 10px 28px rgba(15,140,255,.28)}.mj-welcome__brand-mark::before{content:"";width:22px;height:15px;border:3px solid #fff;border-radius:12px 12px 7px 7px;transform:skewX(-8deg)}
+    .mj-welcome__visual{position:relative;display:grid;place-items:center;min-height:285px;margin:18px 0 8px}.mj-welcome__phone{position:relative;width:min(68vw,245px);height:270px;border:1px solid rgba(255,255,255,.12);border-radius:34px;background:linear-gradient(160deg,#161d29,#0d121b);box-shadow:0 28px 70px rgba(0,0,0,.42);overflow:hidden;transform:rotate(-2deg)}
+    .mj-welcome__map{position:absolute;inset:0;background:linear-gradient(45deg,transparent 47%,rgba(148,163,184,.12) 48%,rgba(148,163,184,.12) 52%,transparent 53%),linear-gradient(-35deg,transparent 42%,rgba(148,163,184,.1) 43%,rgba(148,163,184,.1) 47%,transparent 48%),#111925;background-size:92px 92px,110px 110px,auto}.mj-welcome__route{position:absolute;left:45px;top:54px;width:145px;height:145px;border:5px solid transparent;border-left-color:#20d8a0;border-bottom-color:#0f8cff;border-radius:50%;transform:rotate(-18deg);filter:drop-shadow(0 0 8px rgba(32,216,160,.35))}.mj-welcome__pin{position:absolute;display:grid;place-items:center;width:38px;height:38px;border-radius:50% 50% 50% 8px;transform:rotate(-45deg);background:linear-gradient(135deg,#0f8cff,#20d8a0);box-shadow:0 10px 24px rgba(15,140,255,.35)}.mj-welcome__pin::after{content:"";width:12px;height:12px;border-radius:50%;background:#fff}.mj-welcome__pin--a{left:38px;top:46px}.mj-welcome__pin--b{right:38px;bottom:52px}.mj-welcome__ride{position:absolute;left:50%;top:48%;display:grid;place-items:center;width:58px;height:58px;border-radius:20px;background:#fff;color:#0b1220;font-size:27px;transform:translate(-50%,-50%) rotate(2deg);box-shadow:0 15px 35px rgba(0,0,0,.35)}
+    .mj-welcome__copy{margin-top:auto}.mj-welcome__eyebrow{margin:0 0 10px;color:#6ee7c6;font-size:13px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.mj-welcome h2{max-width:360px;margin:0;color:#fff;font-size:clamp(34px,9vw,48px);line-height:1.02;letter-spacing:-.055em}.mj-welcome__description{max-width:390px;margin:15px 0 0;color:#b8c2d1;font-size:16px;line-height:1.55}
+    .mj-welcome__benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:22px 0}.mj-welcome__benefit{min-width:0;padding:13px 8px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);text-align:center}.mj-welcome__benefit strong{display:block;color:#fff;font-size:13px}.mj-welcome__benefit span{display:block;margin-top:3px;color:#8f9bad;font-size:10px}
+    .mj-welcome__start{width:100%;min-height:58px;border:0;border-radius:20px;background:linear-gradient(100deg,#0f8cff,#20d8a0);color:#fff;font-size:17px;font-weight:900;box-shadow:0 16px 36px rgba(15,140,255,.26);cursor:pointer}.mj-welcome__start:active{transform:scale(.985)}
+    .mj-welcome__login{min-height:46px;border:0;background:transparent;color:#b8c2d1;font-size:14px;font-weight:750;cursor:pointer}.mj-welcome__login strong{color:#fff}
+
     @keyframes mjSplashIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(-1.5vh) scale(1)}}
     @keyframes mjLoader{0%{transform:translateX(-120%)}50%{transform:translateX(110%)}100%{transform:translateX(230%)}}
-    @media (prefers-reduced-motion:reduce){.mj-splash__content,.mj-splash__loader::after{animation:none}.mj-splash{transition:none}}
+    @media(max-height:700px){.mj-welcome__visual{min-height:210px}.mj-welcome__phone{height:205px;width:185px}.mj-welcome__route{left:30px;top:35px;width:120px;height:120px}.mj-welcome h2{font-size:34px}.mj-welcome__benefits{margin:15px 0}}
+    @media (prefers-reduced-motion:reduce){.mj-splash__content,.mj-splash__loader::after{animation:none}.mj-splash,.mj-welcome{transition:none}}
   </style>
   <title>MotoJá Campo Verde</title>
 </head>
@@ -48,6 +63,32 @@
   </div>
   <span class="mj-splash__loader" aria-hidden="true"></span>
 </div>
+
+<section id="mjWelcome" class="mj-welcome" aria-labelledby="mjWelcomeTitle" aria-hidden="true">
+  <span class="mj-welcome__glow mj-welcome__glow--blue"></span>
+  <span class="mj-welcome__glow mj-welcome__glow--green"></span>
+  <div class="mj-welcome__inner">
+    <div class="mj-welcome__brand"><span class="mj-welcome__brand-mark" aria-hidden="true"></span><span>MotoJá</span></div>
+    <div class="mj-welcome__visual" aria-hidden="true">
+      <div class="mj-welcome__phone">
+        <div class="mj-welcome__map"></div><div class="mj-welcome__route"></div><span class="mj-welcome__pin mj-welcome__pin--a"></span><span class="mj-welcome__pin mj-welcome__pin--b"></span><span class="mj-welcome__ride">🏍</span>
+      </div>
+    </div>
+    <div class="mj-welcome__copy">
+      <p class="mj-welcome__eyebrow">Mobilidade local</p>
+      <h2 id="mjWelcomeTitle">Sua cidade fica mais perto.</h2>
+      <p class="mj-welcome__description">Peça uma moto em poucos toques, acompanhe a chegada em tempo real e pague diretamente ao motociclista.</p>
+      <div class="mj-welcome__benefits">
+        <article class="mj-welcome__benefit"><strong>Rápido</strong><span>Pedido simples</span></article>
+        <article class="mj-welcome__benefit"><strong>Seguro</strong><span>Viagem acompanhada</span></article>
+        <article class="mj-welcome__benefit"><strong>Local</strong><span>Campo Verde</span></article>
+      </div>
+      <button id="mjWelcomeStart" class="mj-welcome__start" type="button">Começar</button>
+      <button id="mjWelcomeLogin" class="mj-welcome__login" type="button">Já possui conta? <strong>Entrar</strong></button>
+    </div>
+  </div>
+</section>
+
 <main class="app-shell"><section class="phone">
 <header class="topbar"><div><p class="eyebrow">Campo Verde · MT</p><h1>MotoJá</h1></div><button id="logoutButton" class="icon-button hidden" aria-label="Sair">↪</button></header>
 <section id="authView" class="screen active-screen"><div class="hero-card"><span class="hero-icon">🏍️</span><h2>Corrida rápida e local</h2><p>Entre ou crie uma conta para participar do piloto.</p></div><div class="auth-tabs"><button id="showLogin" class="tab active">Entrar</button><button id="showSignup" class="tab">Criar conta</button></div><form id="loginForm" class="form-card"><label>E-mail<input id="loginEmail" type="email" required autocomplete="email"></label><label>Senha<input id="loginPassword" type="password" required minlength="6"></label><button class="primary-button">Entrar</button></form><form id="signupForm" class="form-card hidden"><label>Nome completo<input id="signupName" required minlength="2"></label><label>Telefone<input id="signupPhone" type="tel"></label><label>E-mail<input id="signupEmail" type="email" required></label><label>Senha<input id="signupPassword" type="password" required minlength="6"></label><label>Tipo de conta<select id="signupRole"><option value="passenger">Passageiro</option><option value="driver">Motociclista</option></select></label><button class="primary-button">Criar conta</button></form><p id="authMessage" class="message"></p></section>
@@ -91,11 +132,38 @@
 <script>
   (() => {
     const splash = document.getElementById('mjSplash');
-    if (!splash) return;
-    const closeSplash = () => {
-      splash.classList.add('is-leaving');
-      window.setTimeout(() => splash.remove(), 460);
+    const welcome = document.getElementById('mjWelcome');
+    const startButton = document.getElementById('mjWelcomeStart');
+    const loginButton = document.getElementById('mjWelcomeLogin');
+    const welcomeSeenKey = 'motoja_passenger_welcome_seen_v1';
+
+    const openWelcome = () => {
+      if (!welcome || window.localStorage.getItem(welcomeSeenKey) === '1') return;
+      welcome.classList.add('is-visible');
+      welcome.setAttribute('aria-hidden', 'false');
+      window.setTimeout(() => startButton?.focus(), 380);
     };
+
+    const closeWelcome = () => {
+      if (!welcome) return;
+      window.localStorage.setItem(welcomeSeenKey, '1');
+      welcome.classList.add('is-leaving');
+      welcome.setAttribute('aria-hidden', 'true');
+      window.setTimeout(() => welcome.remove(), 380);
+      document.getElementById('loginEmail')?.focus();
+    };
+
+    const closeSplash = () => {
+      if (!splash || splash.classList.contains('is-leaving')) return;
+      splash.classList.add('is-leaving');
+      window.setTimeout(() => {
+        splash.remove();
+        openWelcome();
+      }, 460);
+    };
+
+    startButton?.addEventListener('click', closeWelcome);
+    loginButton?.addEventListener('click', closeWelcome);
     window.addEventListener('load', () => window.setTimeout(closeSplash, 1200), { once: true });
     window.setTimeout(closeSplash, 3200);
   })();
