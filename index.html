@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#15803d">
+  <meta name="theme-color" content="#0f8cff">
   <meta name="description" content="MotoJá Campo Verde - corridas de moto.">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
@@ -17,9 +17,37 @@
   <link rel="stylesheet" href="driver-home.css">
   <link rel="stylesheet" href="ui-refresh.css">
   <link rel="stylesheet" href="passenger-home.css">
+  <style>
+    .mj-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;overflow:hidden;background:linear-gradient(150deg,#0977ff 0%,#1399f6 42%,#20d8a0 100%);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .42s ease,visibility .42s ease}
+    .mj-splash::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.24),transparent 30%),radial-gradient(circle at 88% 78%,rgba(37,255,178,.24),transparent 34%);filter:blur(12px)}
+    .mj-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+    .mj-splash__content{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;transform:translateY(-1.5vh);animation:mjSplashIn .65s cubic-bezier(.2,.8,.2,1) both}
+    .mj-splash__mark{position:relative;width:112px;height:82px;filter:drop-shadow(0 12px 28px rgba(3,42,86,.24))}
+    .mj-splash__helmet{position:absolute;left:30px;top:4px;width:72px;height:62px;border-radius:38px 38px 22px 22px;background:#fff;clip-path:polygon(0 0,100% 0,100% 68%,73% 68%,61% 100%,28% 79%,0 79%)}
+    .mj-splash__visor{position:absolute;left:58px;top:21px;width:43px;height:24px;border:7px solid #0b7fe8;border-left:0;border-radius:0 18px 18px 0;transform:skewX(-8deg)}
+    .mj-splash__speed{position:absolute;left:0;height:8px;border-radius:999px;background:#fff}.mj-splash__speed:nth-child(3){top:20px;width:42px}.mj-splash__speed:nth-child(4){top:36px;width:54px}.mj-splash__speed:nth-child(5){top:52px;width:36px}
+    .mj-splash__brand{font-size:44px;line-height:.95;font-weight:900;letter-spacing:-.065em;text-shadow:0 8px 22px rgba(2,49,99,.2)}
+    .mj-splash__brand span{font-style:italic}.mj-splash__brand em{color:#d8fff0;font-style:italic}
+    .mj-splash__tagline{margin:0;font-size:14px;font-weight:750;letter-spacing:.02em;color:rgba(255,255,255,.94)}
+    .mj-splash__loader{position:absolute;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));width:54px;height:4px;border-radius:999px;background:rgba(255,255,255,.36);transform:translateX(-50%);overflow:hidden}
+    .mj-splash__loader::after{content:"";display:block;width:48%;height:100%;border-radius:inherit;background:#fff;animation:mjLoader 1.25s ease-in-out infinite}
+    @keyframes mjSplashIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(-1.5vh) scale(1)}}
+    @keyframes mjLoader{0%{transform:translateX(-120%)}50%{transform:translateX(110%)}100%{transform:translateX(230%)}}
+    @media (prefers-reduced-motion:reduce){.mj-splash__content,.mj-splash__loader::after{animation:none}.mj-splash{transition:none}}
+  </style>
   <title>MotoJá Campo Verde</title>
 </head>
 <body>
+<div id="mjSplash" class="mj-splash" role="status" aria-label="Abrindo MotoJá">
+  <div class="mj-splash__content">
+    <div class="mj-splash__mark" aria-hidden="true">
+      <span class="mj-splash__helmet"></span><span class="mj-splash__visor"></span><span class="mj-splash__speed"></span><span class="mj-splash__speed"></span><span class="mj-splash__speed"></span>
+    </div>
+    <div class="mj-splash__brand"><span>Moto</span><em>Já</em></div>
+    <p class="mj-splash__tagline">Rápido. Seguro. Moderno.</p>
+  </div>
+  <span class="mj-splash__loader" aria-hidden="true"></span>
+</div>
 <main class="app-shell"><section class="phone">
 <header class="topbar"><div><p class="eyebrow">Campo Verde · MT</p><h1>MotoJá</h1></div><button id="logoutButton" class="icon-button hidden" aria-label="Sair">↪</button></header>
 <section id="authView" class="screen active-screen"><div class="hero-card"><span class="hero-icon">🏍️</span><h2>Corrida rápida e local</h2><p>Entre ou crie uma conta para participar do piloto.</p></div><div class="auth-tabs"><button id="showLogin" class="tab active">Entrar</button><button id="showSignup" class="tab">Criar conta</button></div><form id="loginForm" class="form-card"><label>E-mail<input id="loginEmail" type="email" required autocomplete="email"></label><label>Senha<input id="loginPassword" type="password" required minlength="6"></label><button class="primary-button">Entrar</button></form><form id="signupForm" class="form-card hidden"><label>Nome completo<input id="signupName" required minlength="2"></label><label>Telefone<input id="signupPhone" type="tel"></label><label>E-mail<input id="signupEmail" type="email" required></label><label>Senha<input id="signupPassword" type="password" required minlength="6"></label><label>Tipo de conta<select id="signupRole"><option value="passenger">Passageiro</option><option value="driver">Motociclista</option></select></label><button class="primary-button">Criar conta</button></form><p id="authMessage" class="message"></p></section>
@@ -60,4 +88,16 @@
 <script src="driver-sheet.js" defer></script>
 <script src="ui-refresh.js" defer></script>
 <script src="passenger-home.js" defer></script>
+<script>
+  (() => {
+    const splash = document.getElementById('mjSplash');
+    if (!splash) return;
+    const closeSplash = () => {
+      splash.classList.add('is-leaving');
+      window.setTimeout(() => splash.remove(), 460);
+    };
+    window.addEventListener('load', () => window.setTimeout(closeSplash, 1200), { once: true });
+    window.setTimeout(closeSplash, 3200);
+  })();
+</script>
 </body></html>
