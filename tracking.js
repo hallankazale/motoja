@@ -10,6 +10,7 @@
   let connectionLine = null;
   let pollTimer = null;
   let lastRideId = null;
+  let requestInFlight = false;
 
   function ensureUi() {
     if ($('#liveTrackingCard') || !$('#passengerActiveRide')) return;
@@ -25,6 +26,10 @@
           <div class="tracking-stat"><span>Tempo aproximado</span><strong id="trackingEta">—</strong></div>
         </div>
       </section>`);
+  }
+
+  function isPassengerVisible() {
+    return Boolean($('#passengerView') && !$('#passengerView').classList.contains('hidden'));
   }
 
   function initMap() {
@@ -58,6 +63,7 @@
   }
 
   function renderTracking(data) {
+    if (!isPassengerVisible()) return;
     ensureUi();
     initMap();
     const card = $('#liveTrackingCard');
@@ -82,12 +88,7 @@
 
     const driverPoint = [driverLat, driverLng];
     const targetPoint = [targetLat, targetLng];
-    const bikeIcon = L.divIcon({
-      className: '',
-      html: '<div class="driver-marker-icon">🏍️</div>',
-      iconSize: [42, 42],
-      iconAnchor: [21, 21],
-    });
+    const bikeIcon = L.divIcon({ className: '', html: '<div class="driver-marker-icon">🏍️</div>', iconSize: [42, 42], iconAnchor: [21, 21] });
 
     if (driverMarker) driverMarker.setLatLng(driverPoint);
     else driverMarker = L.marker(driverPoint, { icon: bikeIcon, title: 'Motociclista' }).addTo(trackingMap).bindPopup('Motociclista');
@@ -99,8 +100,7 @@
     if (connectionLine) connectionLine.setLatLngs([driverPoint, targetPoint]);
     else connectionLine = L.polyline([driverPoint, targetPoint], { weight: 4, opacity: .75, dashArray: '8 8' }).addTo(trackingMap);
 
-    const bounds = L.latLngBounds([driverPoint, targetPoint]);
-    trackingMap.fitBounds(bounds.pad(.28), { maxZoom: 17, animate: true });
+    trackingMap.fitBounds(L.latLngBounds([driverPoint, targetPoint]).pad(.28), { maxZoom: 17, animate: true });
     window.setTimeout(() => trackingMap.invalidateSize(), 100);
 
     const distanceKm = haversineKm(driverLat, driverLng, targetLat, targetLng);
@@ -119,38 +119,54 @@
   }
 
   async function refreshTracking() {
-    ensureUi();
-    const passengerVisible = $('#passengerView') && !$('#passengerView').classList.contains('hidden');
-    if (!passengerVisible) {
-      hideTracking();
+    if (!isPassengerVisible() || document.hidden || requestInFlight) {
+      if (!isPassengerVisible()) hideTracking();
       return;
     }
-    const { data, error } = await trackingClient.rpc('get_active_ride_tracking');
-    if (error) {
+
+    requestInFlight = true;
+    try {
+      const { data, error } = await trackingClient.rpc('get_active_ride_tracking');
+      if (error) {
+        hideTracking();
+        return;
+      }
+      const tracking = Array.isArray(data) ? data[0] : null;
+      if (!tracking) {
+        hideTracking();
+        return;
+      }
+      renderTracking(tracking);
+    } catch (_) {
+      // Oscilações de rede não devem vazar mensagens técnicas para o usuário.
       hideTracking();
-      return;
+    } finally {
+      requestInFlight = false;
     }
-    const tracking = Array.isArray(data) ? data[0] : null;
-    if (!tracking) {
-      hideTracking();
-      return;
-    }
-    renderTracking(tracking);
   }
 
-  function startPolling() {
+  function syncPolling() {
     ensureUi();
-    if (!pollTimer) pollTimer = window.setInterval(refreshTracking, 3000);
-    refreshTracking();
+    if (isPassengerVisible() && !document.hidden) {
+      if (!pollTimer) pollTimer = window.setInterval(refreshTracking, 4000);
+      refreshTracking();
+    } else {
+      window.clearInterval(pollTimer);
+      pollTimer = null;
+      hideTracking();
+    }
   }
 
   trackingClient.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) window.setTimeout(startPolling, 800);
-    else hideTracking();
+    if (session?.user) window.setTimeout(syncPolling, 800);
+    else {
+      window.clearInterval(pollTimer);
+      pollTimer = null;
+      hideTracking();
+    }
   });
-  document.addEventListener('click', () => window.setTimeout(refreshTracking, 500));
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) refreshTracking();
-  });
-  window.setTimeout(startPolling, 1200);
+  document.addEventListener('click', () => window.setTimeout(syncPolling, 450));
+  document.addEventListener('visibilitychange', syncPolling);
+  window.setInterval(syncPolling, 5000);
+  window.setTimeout(syncPolling, 1200);
 })();
