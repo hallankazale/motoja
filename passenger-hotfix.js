@@ -20,6 +20,15 @@ async function loadPassenger(){
   $('#passengerRides').innerHTML=list.length?list.map(rideCard).join(''):'<p>Nenhuma corrida solicitada.</p>';
 }
 
+async function confirmBoarding(rideId){
+  const button=document.querySelector('[data-confirm-boarding]');
+  if(button)button.disabled=true;
+  const {error}=await client.rpc('confirm_passenger_boarding',{p_ride_id:rideId});
+  msg('#appMessage',error?error.message:'Embarque confirmado. O motociclista já pode iniciar a corrida.',Boolean(error));
+  if(error&&button)button.disabled=false;
+  await loadPassenger();
+}
+
 function renderPassengerActive(r){
   const box=$('#passengerActiveRide');
   if(!r){box.classList.add('hidden');box.innerHTML='';return}
@@ -30,9 +39,15 @@ function renderPassengerActive(r){
     extra=`<div class="driver-summary"><strong>${safe(name)}</strong><span>${safe(vehicle.model||'Moto')} · ${safe(vehicle.color||'')} · ${safe(vehicle.plate||'')}</span></div>`;
     if(r.payment_method==='pix'&&info.driver?.pix_key&&r.status==='completed')extra+=`<p><strong>Chave PIX:</strong> ${safe(info.driver.pix_key)}</p>`;
   }
-  if(r.status==='driver_arriving')extra+=`<div class="code-box"><span>Código de segurança</span><strong>${safe(r.safety_code)}</strong></div>`;
+  if(r.status==='driver_arriving'&&r.arrived_at&&!r.passenger_boarded_at){
+    extra+=`<div class="code-box"><span>O motociclista chegou</span><strong>Confirme somente depois de subir na moto.</strong></div><button class="primary-button" data-confirm-boarding="${r.id}">Estou na moto</button>`;
+  }
+  if(r.status==='driver_arriving'&&r.passenger_boarded_at){
+    extra+=`<div class="code-box"><span>Embarque confirmado</span><strong>Aguardando o motociclista iniciar a corrida.</strong></div>`;
+  }
   if(r.status==='completed'&&r.payment_status==='confirmed')extra+=ratingForm(r.id);
-  box.innerHTML=`<h2>${labels[r.status]}</h2><p><strong>Destino:</strong> ${safe(r.destination_address)}</p><p><strong>Valor:</strong> ${money(r.final_price||r.estimated_price)} · ${r.payment_method==='pix'?'PIX':'Dinheiro'}</p>${extra}${['requested','accepted','driver_arriving'].includes(r.status)?`<button class="danger-button" data-cancel="${r.id}">Cancelar corrida</button>`:''}`;
+  box.innerHTML=`<h2>${labels[r.status]}</h2><p><strong>Destino:</strong> ${safe(r.destination_address)}</p><p><strong>Valor:</strong> ${money(r.final_price||r.estimated_price)} · ${r.payment_method==='pix'?'PIX':'Dinheiro'}</p>${extra}${['requested','accepted','driver_arriving'].includes(r.status)&&!r.passenger_boarded_at?`<button class="danger-button" data-cancel="${r.id}">Cancelar corrida</button>`:''}`;
   box.querySelector('[data-cancel]')?.addEventListener('click',()=>cancelRide(r.id));
+  box.querySelector('[data-confirm-boarding]')?.addEventListener('click',()=>confirmBoarding(r.id));
   box.querySelector('#ratingForm')?.addEventListener('submit',event=>rateRide(event,r.id));
 }
