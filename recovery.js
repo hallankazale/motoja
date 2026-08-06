@@ -2,6 +2,35 @@
   const APP_URL = 'https://hallankazale.github.io/motoja/';
   const $ = (selector) => document.querySelector(selector);
 
+  /**
+   * Mantém a interface legada invisível enquanto o Supabase restaura a sessão.
+   * Sem este bloqueio, o HTML nasce com authView ativo e o login antigo aparece
+   * por alguns milissegundos antes de o app descobrir que já existe uma sessão.
+   */
+  async function gateInitialRender() {
+    const phone = document.querySelector('.phone');
+    if (!phone) return;
+
+    phone.style.visibility = 'hidden';
+    phone.style.opacity = '0';
+    phone.style.pointerEvents = 'none';
+
+    try {
+      await client.auth.getSession();
+      // Permite que o boot principal aplique perfil e papel antes da pintura.
+      await new Promise((resolve) => window.setTimeout(resolve, 80));
+    } catch (error) {
+      console.warn('Não foi possível restaurar a sessão inicial.', error);
+    } finally {
+      phone.style.transition = 'opacity 180ms ease';
+      phone.style.visibility = 'visible';
+      phone.style.opacity = '1';
+      phone.style.pointerEvents = '';
+    }
+  }
+
+  gateInitialRender();
+
   function setAuthMessage(text, isError = false) {
     const element = $('#authMessage');
     if (!element) return;
