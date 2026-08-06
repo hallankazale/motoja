@@ -1,0 +1,60 @@
+:root{
+  --mj-green:#15803d;
+  --mj-green-strong:#166534;
+  --mj-green-soft:#dcfce7;
+  --mj-ink:#111827;
+  --mj-muted:#4b5563;
+  --mj-surface:#ffffff;
+  --mj-border:#d1d5db;
+  --mj-blue:#1d4ed8;
+  --mj-danger:#b91c1c;
+}
+
+body.passenger-home-active{overflow:hidden;background:#eef2f7}
+body.passenger-home-active .app-shell,
+body.passenger-home-active .phone,
+body.passenger-home-active #appView,
+body.passenger-home-active #passengerView{height:100dvh;max-height:100dvh;min-height:100dvh;width:100%;max-width:none;margin:0;border-radius:0;overflow:hidden;background:#eef2f7}
+body.passenger-home-active .phone{box-shadow:none}
+body.passenger-home-active .topbar{position:fixed;z-index:760;top:calc(env(safe-area-inset-top) + 10px);left:14px;right:14px;height:58px;padding:0 16px;border-radius:20px;background:#fff;color:var(--mj-ink);box-shadow:0 12px 32px rgba(15,23,42,.18);display:flex;align-items:center}
+body.passenger-home-active .topbar .eyebrow{color:var(--mj-muted);font-size:10px;letter-spacing:.08em;margin:0}
+body.passenger-home-active .topbar h1{color:var(--mj-ink);font-size:23px;line-height:1;margin:2px 0 0}
+body.passenger-home-active #accountBanner{position:fixed;z-index:755;top:calc(env(safe-area-inset-top) + 78px);left:18px;right:18px;margin:0;padding:8px 12px;border:0;border-radius:14px;background:rgba(255,255,255,.96);color:var(--mj-ink);font-weight:800;font-size:12px;box-shadow:0 8px 20px rgba(15,23,42,.12)}
+body.passenger-home-active #passengerView{position:fixed;inset:0;padding:0!important;margin:0!important}
+body.passenger-home-active #rideMap{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;border-radius:0!important;margin:0!important;z-index:1}
+body.passenger-home-active #passengerRequestCard{position:absolute;z-index:700;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0!important;padding:10px 16px 18px;border:1px solid rgba(209,213,219,.95);border-radius:28px;background:#fff;color:var(--mj-ink);box-shadow:0 -14px 44px rgba(15,23,42,.24);max-height:min(72dvh,660px);overflow:auto;transform:translateY(var(--passenger-sheet-offset,0px));transition:transform .24s ease;overscroll-behavior:contain}
+body.passenger-home-active #passengerRequestCard.passenger-sheet-collapsed{--passenger-sheet-offset:calc(100% - 188px)}
+body.passenger-home-active #passengerRequestCard.passenger-sheet-expanded{--passenger-sheet-offset:0px}
+body.passenger-home-active .passenger-sheet-handle{position:sticky;top:-10px;z-index:4;height:34px;margin:-10px -16px 4px;background:#fff;border-radius:28px 28px 0 0;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+body.passenger-home-active .passenger-sheet-handle::before{content:"";width:54px;height:5px;border-radius:999px;background:#9ca3af}
+body.passenger-home-active #passengerRequestCard h2{margin:0 0 14px;color:var(--mj-ink);font-size:24px;line-height:1.15}
+body.passenger-home-active #passengerRequestCard label{color:var(--mj-ink);font-weight:800;font-size:13px}
+body.passenger-home-active #passengerRequestCard input,
+body.passenger-home-active #passengerRequestCard select{min-height:52px;background:#fff;color:var(--mj-ink);border:1.5px solid var(--mj-border);border-radius:16px;font-size:16px;padding:12px 14px}
+body.passenger-home-active #passengerRequestCard input::placeholder{color:#6b7280;opacity:1}
+body.passenger-home-active #passengerRequestCard input:focus,
+body.passenger-home-active #passengerRequestCard select:focus{outline:3px solid rgba(29,78,216,.18);border-color:var(--mj-blue)}
+body.passenger-home-active .location-button{min-width:52px;height:52px;border-radius:16px;background:var(--mj-blue);color:#fff;border:0;font-size:22px;font-weight:900}
+body.passenger-home-active .helper-text{color:var(--mj-muted)!important;font-size:12px;line-height:1.45}
+body.passenger-home-active .helper-text.error-text,
+body.passenger-home-active .message.error{color:var(--mj-danger)!important;background:#fef2f2;border:1px solid #fecaca}
+body.passenger-home-active .payment-grid label{background:#f9fafb;color:var(--mj-ink);border:1px solid var(--mj-border);border-radius:16px;min-height:50px;padding:12px}
+body.passenger-home-active .price-box{background:var(--mj-green-soft);color:var(--mj-green-strong);border:1px solid #86efac;border-radius:18px;padding:14px 16px}
+body.passenger-home-active .price-box span{color:var(--mj-green-strong)}
+body.passenger-home-active .price-box strong{color:var(--mj-green-strong);font-size:24px}
+body.passenger-home-active #requestRideButton{min-height:56px;border-radius:18px;background:var(--mj-green);color:#fff;border:0;font-size:17px;font-weight:900;box-shadow:0 10px 24px rgba(21,128,61,.24)}
+body.passenger-home-active #requestRideButton:hover{background:var(--mj-green-strong)}
+body.passenger-home-active #requestRideButton:disabled{background:#d1d5db;color:#374151;box-shadow:none;opacity:1}
+body.passenger-home-active #passengerActiveRide{position:absolute;z-index:710;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0;border-radius:26px;background:#fff;color:var(--mj-ink);box-shadow:0 -12px 38px rgba(15,23,42,.22);max-height:58dvh;overflow:auto}
+body.passenger-home-active #passengerView>.panel-card:last-child{display:none}
+body.passenger-home-active .suggestions{z-index:900;background:#fff;color:var(--mj-ink);border:1px solid var(--mj-border);box-shadow:0 14px 30px rgba(15,23,42,.2)}
+body.passenger-home-active .suggestion-item{color:var(--mj-ink);background:#fff;border-bottom:1px solid #e5e7eb;text-align:left}
+body.passenger-home-active .suggestion-item:active{background:#f3f4f6}
+body.passenger-home-active .leaflet-control-attribution{font-size:9px}
+
+@media(min-width:700px){
+  body.passenger-home-active .topbar{left:50%;right:auto;width:min(620px,calc(100vw - 28px));transform:translateX(-50%)}
+  body.passenger-home-active #accountBanner{left:50%;right:auto;width:min(600px,calc(100vw - 36px));transform:translateX(-50%)}
+  body.passenger-home-active #passengerRequestCard,
+  body.passenger-home-active #passengerActiveRide{left:50%;right:auto;width:min(560px,calc(100vw - 20px));transform:translate(-50%,var(--passenger-sheet-offset,0px))}
+}
