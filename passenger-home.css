@@ -21,7 +21,6 @@ body.passenger-home-active .screen{padding:0!important}
 body.passenger-home-active #passengerView{position:fixed;inset:0;display:block!important}
 body.passenger-home-active #rideMap{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;z-index:1}
 
-/* Cabeçalho compacto, com contraste forte */
 body.passenger-home-active .topbar{
   position:fixed;z-index:760;top:calc(env(safe-area-inset-top) + 12px);left:16px;right:auto;width:auto;height:58px;padding:7px 12px 7px 10px;
   display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.88);border-radius:20px;background:rgba(255,255,255,.94);color:var(--mj-ink);
@@ -33,19 +32,13 @@ body.passenger-home-active .topbar .eyebrow{display:none}
 body.passenger-home-active .topbar h1{margin:0;color:var(--mj-ink);font-size:21px;line-height:1;font-weight:950;letter-spacing:-.04em}
 body.passenger-home-active #logoutButton{width:40px;height:40px;margin-left:3px;border:0;border-radius:13px;background:#eef2f7;color:var(--mj-ink);box-shadow:none;font-size:0}
 body.passenger-home-active #logoutButton::before{content:"Sair";font-size:12px;font-weight:900}
-
-/* Seletor de perfil não fica sobre o mapa */
 body.passenger-home-active #accountBanner{display:none!important}
 body.passenger-home-active .ui-theme-button{display:none!important}
-
-/* Botão de GPS flutuante */
 body.passenger-home-active #useMyLocation{
   position:fixed;z-index:720;right:16px;bottom:calc(232px + env(safe-area-inset-bottom));width:54px!important;height:54px!important;min-width:54px!important;
   display:grid;place-items:center;border:2px solid #fff!important;border-radius:18px!important;background:var(--mj-primary)!important;color:#fff!important;
   box-shadow:0 12px 28px rgba(36,87,255,.35);font-size:22px!important
 }
-
-/* Bottom sheet */
 body.passenger-home-active #passengerRequestCard{
   position:absolute;z-index:700;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0!important;padding:12px 18px 20px!important;
   max-height:76dvh;overflow:auto;overscroll-behavior:contain;border:1px solid rgba(223,229,236,.96)!important;border-radius:30px!important;
@@ -60,7 +53,6 @@ body.passenger-home-active .passenger-sheet-handle{
 }
 body.passenger-home-active .passenger-sheet-handle::before{content:"";width:48px;height:5px;border-radius:999px;background:#aab4c2;box-shadow:none}
 body.passenger-home-active .passenger-sheet-handle:active{cursor:grabbing}
-
 body.passenger-home-active #passengerRequestCard h2{margin:0 0 16px;color:var(--mj-ink)!important;font-size:27px;line-height:1.1;font-weight:950;letter-spacing:-.045em}
 body.passenger-home-active #passengerRequestCard h2::after{content:"Corridas rápidas em Campo Verde";display:block;margin-top:5px;color:var(--mj-muted);font-size:12px;font-weight:700;letter-spacing:0}
 body.passenger-home-active #rideForm{display:grid;gap:11px}
@@ -75,7 +67,6 @@ body.passenger-home-active #passengerRequestCard input:focus,
 body.passenger-home-active #passengerRequestCard select:focus{outline:none!important;border-color:var(--mj-primary)!important;box-shadow:0 0 0 4px rgba(36,87,255,.14)!important;background:#fff!important}
 body.passenger-home-active .location-field{display:block!important}
 body.passenger-home-active .helper-text{margin:0!important;color:var(--mj-muted)!important;font-size:12px!important;line-height:1.4}
-
 body.passenger-home-active .payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px}
 body.passenger-home-active .payment-grid label{min-height:54px;display:flex!important;align-items:center;justify-content:center;gap:9px;padding:10px 12px;border:1.5px solid var(--mj-line)!important;border-radius:17px!important;background:#f8fafc!important;color:var(--mj-ink)!important;font-size:14px!important}
 body.passenger-home-active .payment-grid input{width:20px!important;height:20px!important;min-height:20px!important;padding:0!important;accent-color:var(--mj-primary)}
@@ -85,15 +76,87 @@ body.passenger-home-active .price-box strong{color:#281d00!important;font-size:2
 body.passenger-home-active #requestRideButton{min-height:58px!important;margin-top:2px;border:0!important;border-radius:19px!important;background:linear-gradient(135deg,var(--mj-primary),#4c78ff)!important;color:#fff!important;font-size:17px!important;font-weight:950!important;box-shadow:0 12px 26px rgba(36,87,255,.30)!important}
 body.passenger-home-active #requestRideButton:active{transform:scale(.985)}
 body.passenger-home-active #requestRideButton:disabled{background:#cfd6df!important;color:#4b5563!important;box-shadow:none!important;opacity:1!important}
-
 body.passenger-home-active .suggestions{z-index:950;border:1px solid var(--mj-line)!important;border-radius:17px!important;background:#fff!important;color:var(--mj-ink)!important;box-shadow:0 18px 40px rgba(11,18,32,.18)!important;overflow:hidden}
 body.passenger-home-active .suggestion-item{padding:13px 14px!important;background:#fff!important;color:var(--mj-ink)!important;border-bottom:1px solid #edf1f5!important;text-align:left}
 body.passenger-home-active .suggestion-item:active{background:#eef3ff!important}
-
 body.passenger-home-active #passengerActiveRide{position:absolute;z-index:710;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-height:62dvh;overflow:auto;margin:0!important;padding:18px!important;border-radius:28px!important;background:#fff!important;color:var(--mj-ink)!important;box-shadow:0 -16px 48px rgba(11,18,32,.24)!important}
 body.passenger-home-active #passengerView>.panel-card:last-child{display:none!important}
 body.passenger-home-active .message.error,body.passenger-home-active .error-text{color:var(--mj-danger)!important;background:#fff2f2!important;border-color:#ffcaca!important}
 body.passenger-home-active .leaflet-control-attribution{font-size:8px!important;background:rgba(255,255,255,.76)!important}
+
+/* Correção de centralização da Tela 2 - Boas-vindas */
+.mj-welcome{
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+.mj-welcome__inner{
+  box-sizing:border-box!important;
+  width:min(100%,430px)!important;
+  max-width:430px!important;
+  min-height:100dvh!important;
+  margin:0 auto!important;
+  padding:calc(18px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom))!important;
+  align-items:stretch!important;
+}
+.mj-welcome__brand{
+  width:100%!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
+.mj-welcome__visual{
+  width:100%!important;
+  min-height:245px!important;
+  margin:14px auto 6px!important;
+}
+.mj-welcome__phone{
+  width:min(74vw,260px)!important;
+  max-width:260px!important;
+  height:250px!important;
+  margin-inline:auto!important;
+  transform:none!important;
+}
+.mj-welcome__copy{
+  width:100%!important;
+  margin-top:8px!important;
+  text-align:center!important;
+}
+.mj-welcome__eyebrow,
+.mj-welcome h2,
+.mj-welcome__description{
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+}
+.mj-welcome h2{
+  max-width:360px!important;
+  font-size:clamp(34px,9vw,44px)!important;
+}
+.mj-welcome__description{
+  max-width:360px!important;
+}
+.mj-welcome__benefits{
+  width:100%!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.mj-welcome__benefit{
+  min-width:0!important;
+  padding:12px 6px!important;
+}
+.mj-welcome__start,
+.mj-welcome__login{
+  width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+@media(max-width:360px){
+  .mj-welcome__inner{padding-left:14px!important;padding-right:14px!important}
+  .mj-welcome__phone{width:min(76vw,235px)!important;height:225px!important}
+  .mj-welcome__benefit strong{font-size:12px!important}
+  .mj-welcome__benefit span{font-size:9px!important}
+}
 
 @media(min-width:700px){
   body.passenger-home-active .topbar{left:calc(50% - 310px)}
