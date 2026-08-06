@@ -12,7 +12,12 @@
 
   function driverVisible() {
     const view = $('#driverView');
-    return view && !view.classList.contains('hidden');
+    return Boolean(view && !view.classList.contains('hidden'));
+  }
+
+  function setText(selector, value) {
+    const element = $(selector);
+    if (element) element.textContent = value;
   }
 
   function ensureStructure() {
@@ -34,9 +39,7 @@
           <button id="driverEarningsButton" class="driver-earnings-pill" aria-label="Ver ganhos do dia">R$ 0,00</button>
           <button id="driverCenterMap" class="driver-circle-button" aria-label="Centralizar mapa">⌖</button>
         </header>
-        <div class="driver-map-actions">
-          <button id="driverLayersButton" aria-label="Alternar mapa">◫</button>
-        </div>
+        <div class="driver-map-actions"><button id="driverLayersButton" aria-label="Alternar mapa">◫</button></div>
         <section class="driver-bottom-sheet">
           <div class="driver-sheet-handle"></div>
           <div class="driver-status-row">
@@ -74,29 +77,34 @@
         </aside>
       </section>`);
 
-    if (approvalCard) approvalCard.remove();
-    if (activeRide) $('#driverTabHome').append(activeRide);
-    if (openRides) $('#driverTabHome').append(openRides);
+    // Os controles legados continuam no DOM porque app.js e dispatch.js os utilizam.
+    // Apenas ocultamos visualmente o cartão antigo para evitar referências nulas.
+    if (approvalCard) {
+      approvalCard.classList.add('hidden');
+      approvalCard.setAttribute('aria-hidden', 'true');
+    }
+    if (activeRide) $('#driverTabHome')?.append(activeRide);
+    if (openRides) $('#driverTabHome')?.append(openRides);
     if (historyCard) {
       const driverRides = $('#driverRides');
-      if (driverRides) $('#driverTabHistory').append(driverRides);
+      if (driverRides) $('#driverTabHistory')?.append(driverRides);
       historyCard.remove();
     }
-    if (setup) $('#driverTabVehicle').append(setup);
+    if (setup) $('#driverTabVehicle')?.append(setup);
 
-    $('#driverHomeOnline').onclick = () => $('#onlineToggle')?.click();
-    $('#driverCenterMap').onclick = centerOnDriver;
-    $('#driverMenuButton').onclick = () => $('#driverMenuOverlay').classList.remove('hidden');
-    $('#driverMenuClose').onclick = () => $('#driverMenuOverlay').classList.add('hidden');
-    $('#driverMenuOverlay').addEventListener('click', (event) => {
+    $('#driverHomeOnline')?.addEventListener('click', () => $('#onlineToggle')?.click());
+    $('#driverCenterMap')?.addEventListener('click', centerOnDriver);
+    $('#driverMenuButton')?.addEventListener('click', () => $('#driverMenuOverlay')?.classList.remove('hidden'));
+    $('#driverMenuClose')?.addEventListener('click', () => $('#driverMenuOverlay')?.classList.add('hidden'));
+    $('#driverMenuOverlay')?.addEventListener('click', (event) => {
       if (event.target.id === 'driverMenuOverlay') event.currentTarget.classList.add('hidden');
     });
-    $('#driverEarningsButton').onclick = () => selectTab('earnings');
-    document.querySelectorAll('[data-driver-tab]').forEach((button) => button.onclick = () => selectTab(button.dataset.driverTab));
-    document.querySelectorAll('[data-menu-tab]').forEach((button) => button.onclick = () => {
+    $('#driverEarningsButton')?.addEventListener('click', () => selectTab('earnings'));
+    document.querySelectorAll('[data-driver-tab]').forEach((button) => button.addEventListener('click', () => selectTab(button.dataset.driverTab)));
+    document.querySelectorAll('[data-menu-tab]').forEach((button) => button.addEventListener('click', () => {
       selectTab(button.dataset.menuTab);
-      $('#driverMenuOverlay').classList.add('hidden');
-    });
+      $('#driverMenuOverlay')?.classList.add('hidden');
+    }));
 
     initMap();
     observeLocationText();
@@ -133,10 +141,10 @@
   function observeLocationText() {
     const source = $('#driverLocationStatus');
     if (!source || observer) return;
-    const sync = () => { if ($('#driverHomeLocation')) $('#driverHomeLocation').textContent = source.textContent || 'Localização indisponível.'; };
-    observer = new MutationObserver(sync);
+    const syncLocation = () => setText('#driverHomeLocation', source.textContent || 'Localização indisponível.');
+    observer = new MutationObserver(syncLocation);
     observer.observe(source, { childList: true, characterData: true, subtree: true });
-    sync();
+    syncLocation();
   }
 
   async function loadSummary() {
@@ -163,27 +171,29 @@
     const ratings = ratingsResult.data || [];
     const rating = ratings.length ? ratings.reduce((sum, item) => sum + Number(item.stars || 0), 0) / ratings.length : null;
 
-    $('#driverEarningsButton').textContent = money(grossToday);
-    $('#driverTodayGross').textContent = money(grossToday);
-    $('#driverTodayCount').textContent = String(completedToday.length);
-    $('#driverRating').textContent = rating ? `${rating.toFixed(2)} ★` : '—';
-    $('#driverMenuName').textContent = profile?.full_name || 'Motociclista';
-    $('#driverMenuRating').textContent = rating ? `${rating.toFixed(2)} ★ · MotoJá` : 'MotoJá · Campo Verde';
+    setText('#driverEarningsButton', money(grossToday));
+    setText('#driverTodayGross', money(grossToday));
+    setText('#driverTodayCount', String(completedToday.length));
+    setText('#driverRating', rating ? `${rating.toFixed(2)} ★` : '—');
+    setText('#driverMenuName', profile?.full_name || 'Motociclista');
+    setText('#driverMenuRating', rating ? `${rating.toFixed(2)} ★ · MotoJá` : 'MotoJá · Campo Verde');
 
     const online = Boolean(driver?.is_online);
-    $('#driverHomeStatus').textContent = online ? 'Buscando corridas' : 'Offline';
-    $('#driverHomeOnline').textContent = online ? 'Desconectar' : 'Ficar online';
-    $('#driverHomeOnline').classList.toggle('online', online);
+    setText('#driverHomeStatus', online ? 'Buscando corridas' : 'Offline');
+    setText('#driverHomeOnline', online ? 'Desconectar' : 'Ficar online');
+    $('#driverHomeOnline')?.classList.toggle('online', online);
     if (Number.isFinite(Number(driver?.current_lat)) && Number.isFinite(Number(driver?.current_lng))) updateMap(Number(driver.current_lat), Number(driver.current_lng));
 
-    $('#driverTabEarnings').innerHTML = `
+    const earningsPanel = $('#driverTabEarnings');
+    if (earningsPanel) earningsPanel.innerHTML = `
       <article class="panel-card"><h3>Central de ganhos</h3>
         <div class="driver-quick-grid"><article class="driver-quick-card"><span>Hoje</span><strong>${money(grossToday)}</strong></article><article class="driver-quick-card"><span>Semana</span><strong>${money(sumPeriod(rides, 7))}</strong></article><article class="driver-quick-card"><span>Mês</span><strong>${money(sumMonth(rides))}</strong></article></div>
         <p><strong>PIX e dinheiro vão direto ao motociclista.</strong></p><p>O MotoJá não retém saldo das corridas neste modelo.</p>
       </article>`;
 
     const history = rides.slice(0, 30).map((ride) => `<article class="driver-history-item"><header><strong>${escapeHtml(ride.destination_address)}</strong><span>${money(ride.final_price || ride.estimated_price)}</span></header><p>${escapeHtml(ride.pickup_address)} → ${escapeHtml(ride.destination_address)}</p><small>${statusLabel(ride.status)} · ${ride.payment_method === 'pix' ? 'PIX' : 'Dinheiro'} · ${new Date(ride.requested_at).toLocaleString('pt-BR')}</small></article>`).join('');
-    $('#driverTabHistory').innerHTML = history || '<p>Nenhuma corrida registrada.</p>';
+    const historyPanel = $('#driverTabHistory');
+    if (historyPanel) historyPanel.innerHTML = history || '<p>Nenhuma corrida registrada.</p>';
   }
 
   function sumPeriod(rides, days) {
