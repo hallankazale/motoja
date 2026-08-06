@@ -3,19 +3,9 @@
     const latitude = Number(lat);
     const longitude = Number(lng);
     if (Number.isFinite(latitude) && Number.isFinite(longitude) && latitude !== 0 && longitude !== 0) {
-      return {
-        value: `${latitude},${longitude}`,
-        lat: latitude,
-        lng: longitude,
-        precise: true,
-      };
+      return { value: `${latitude},${longitude}`, lat: latitude, lng: longitude, precise: true };
     }
-    return {
-      value: address || 'Campo Verde, MT',
-      lat: null,
-      lng: null,
-      precise: false,
-    };
+    return { value: address || 'Campo Verde, MT', lat: null, lng: null, precise: false };
   };
 
   const navigationLinks = (point, label) => {
@@ -62,8 +52,11 @@
     if (ride.status === 'driver_arriving' && !ride.arrived_at) {
       action = '<button class="primary-button" data-action="mark_driver_arrived">Cheguei ao passageiro</button>';
     }
-    if (ride.status === 'driver_arriving' && ride.arrived_at) {
-      action = '<form id="startRideForm"><label>Código do passageiro<input id="safetyCodeInput" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required autocomplete="one-time-code"></label><button class="primary-button">Validar código e iniciar</button></form>';
+    if (ride.status === 'driver_arriving' && ride.arrived_at && !ride.passenger_boarded_at) {
+      action = '<div class="code-box"><span>Aguardando passageiro</span><strong>O passageiro precisa tocar em “Estou na moto”</strong></div>';
+    }
+    if (ride.status === 'driver_arriving' && ride.passenger_boarded_at) {
+      action = '<div class="code-box"><span>Embarque confirmado</span><strong>Passageiro pronto</strong></div><button class="primary-button" data-action="start_ride">Iniciar corrida</button>';
     }
     if (ride.status === 'in_progress') {
       action = '<button class="primary-button" data-action="complete_ride">Finalizar corrida</button>';
@@ -81,10 +74,6 @@
 
     box.querySelector('[data-action]')?.addEventListener('click', (event) => {
       rideAction(event.currentTarget.dataset.action, ride.id);
-    });
-    box.querySelector('#startRideForm')?.addEventListener('submit', (event) => {
-      event.preventDefault();
-      rideAction('start_ride', ride.id, { p_safety_code: $('#safetyCodeInput').value.trim() });
     });
   };
 })();
