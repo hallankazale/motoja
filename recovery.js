@@ -2,32 +2,16 @@
   const APP_URL = 'https://hallankazale.github.io/motoja/';
   const $ = (selector) => document.querySelector(selector);
 
-  /**
-   * Evita que a tela legada de login apareça entre a splash e a tela de boas-vindas.
-   * Quando a splash começa a desaparecer, a segunda tela já fica pronta por baixo.
-   */
-  function shieldSplashTransition() {
-    const splash = document.getElementById('mjSplash');
-    const welcome = document.getElementById('mjWelcome');
-    if (!splash || !welcome) return;
-
-    const prepareWelcome = () => {
-      welcome.classList.remove('is-leaving');
-      welcome.classList.add('is-visible');
-      welcome.setAttribute('aria-hidden', 'false');
-    };
-
-    const observer = new MutationObserver(() => {
-      if (splash.classList.contains('is-leaving')) {
-        prepareWelcome();
-        observer.disconnect();
-      }
-    });
-
-    observer.observe(splash, { attributes: true, attributeFilter: ['class'] });
+  function loadAuthV3Styles() {
+    if (document.querySelector('link[data-motoja-auth-v3]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'auth-v3.css?v=1';
+    link.dataset.motojaAuthV3 = '1';
+    document.head.appendChild(link);
   }
 
-  shieldSplashTransition();
+  loadAuthV3Styles();
 
   /**
    * Mantém a interface legada invisível enquanto o Supabase restaura a sessão.
@@ -62,6 +46,64 @@
     if (!element) return;
     element.textContent = text;
     element.classList.toggle('error', isError);
+  }
+
+  async function signInWithProvider(provider) {
+    setAuthMessage(provider === 'google' ? 'Abrindo Google...' : 'Abrindo Apple...');
+    const { error } = await client.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: APP_URL,
+      },
+    });
+
+    if (error) {
+      const providerName = provider === 'google' ? 'Google' : 'Apple';
+      setAuthMessage(`Não foi possível entrar com ${providerName}: ${error.message}`, true);
+    }
+  }
+
+  function ensureAuthV3Ui() {
+    const authView = $('#authView');
+    const loginForm = $('#loginForm');
+    if (!authView || !loginForm || authView.dataset.authV3Ready === '1') return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'mj-auth-v3';
+
+    while (authView.firstChild) {
+      wrapper.appendChild(authView.firstChild);
+    }
+    authView.appendChild(wrapper);
+
+    const heading = document.createElement('div');
+    heading.innerHTML = `
+      <div class="mj-auth-brand"><span class="mj-auth-mark" aria-hidden="true"></span><span>MotoJá</span></div>
+      <div class="mj-auth-copy">
+        <h2>Bem-vindo de volta.</h2>
+        <p>Entre para pedir uma corrida, acompanhar seu motociclista e gerenciar sua conta com segurança.</p>
+      </div>
+    `;
+    wrapper.insertBefore(heading, wrapper.firstChild);
+
+    const social = document.createElement('div');
+    social.className = 'mj-social-auth';
+    social.innerHTML = `
+      <div class="mj-auth-divider"><span>ou continue com</span></div>
+      <button id="googleSignInButton" class="mj-social-button mj-social-button--google" type="button">
+        <span class="mj-social-icon" aria-hidden="true">G</span><span>Continuar com Google</span>
+      </button>
+      <button id="appleSignInButton" class="mj-social-button mj-social-button--apple" type="button">
+        <span class="mj-social-icon" aria-hidden="true"></span><span>Continuar com Apple</span>
+      </button>
+      <p class="mj-auth-legal">Ao continuar, você concorda com os Termos de Uso e a Política de Privacidade do MotoJá.</p>
+    `;
+    loginForm.insertAdjacentElement('afterend', social);
+
+    $('#googleSignInButton')?.addEventListener('click', () => signInWithProvider('google'));
+    $('#appleSignInButton')?.addEventListener('click', () => signInWithProvider('apple'));
+
+    authView.dataset.authV3Ready = '1';
   }
 
   function ensureRecoveryUi() {
@@ -103,12 +145,14 @@
       $('#loginForm').classList.add('hidden');
       $('#signupForm').classList.add('hidden');
       $('#recoveryForm').classList.remove('hidden');
+      $('.mj-social-auth')?.classList.add('hidden');
       setAuthMessage('');
     });
 
     $('#cancelRecoveryButton').addEventListener('click', () => {
       $('#recoveryForm').classList.add('hidden');
       $('#loginForm').classList.remove('hidden');
+      $('.mj-social-auth')?.classList.remove('hidden');
       setAuthMessage('');
     });
 
@@ -141,6 +185,7 @@
       setAuthMessage('Senha alterada com sucesso. Você já pode entrar com a nova senha.');
       updateForm.classList.add('hidden');
       $('#loginForm').classList.remove('hidden');
+      $('.mj-social-auth')?.classList.remove('hidden');
       await client.auth.signOut();
       history.replaceState({}, document.title, APP_URL);
     });
@@ -152,13 +197,17 @@
     $('#signupForm')?.classList.add('hidden');
     $('#recoveryForm')?.classList.add('hidden');
     $('#updatePasswordForm')?.classList.remove('hidden');
+    $('.mj-social-auth')?.classList.add('hidden');
     $('#authView')?.classList.add('active-screen');
     $('#appView')?.classList.remove('active-screen');
     document.documentElement.classList.add('motoja-auth-ready');
     setAuthMessage('Link validado. Crie sua nova senha.');
   }
 
-  document.addEventListener('DOMContentLoaded', ensureRecoveryUi);
+  document.addEventListener('DOMContentLoaded', () => {
+    ensureAuthV3Ui();
+    ensureRecoveryUi();
+  });
 
   client.auth.onAuthStateChange((event) => {
     if (event === 'PASSWORD_RECOVERY') showUpdatePassword();
