@@ -5,8 +5,6 @@
 
   function disableLegacyWelcomeFlow() {
     try {
-      // A lógica inline antiga usa esta chave para decidir se deve abrir a Tela 2.
-      // Mantemos a chave marcada para impedir que o fluxo legado concorra com initial-flow.js.
       window.localStorage.setItem(LEGACY_WELCOME_SEEN_KEY, '1');
     } catch (error) {
       console.warn('Não foi possível neutralizar o fluxo inicial legado.', error);
@@ -16,24 +14,32 @@
   function loadInitialFlow() {
     if (document.querySelector('script[data-motoja-initial-flow]')) return;
     const script = document.createElement('script');
-    script.src = 'initial-flow.js?v=2';
+    script.src = 'initial-flow.js?v=3';
     script.defer = true;
     script.dataset.motojaInitialFlow = '1';
     document.head.appendChild(script);
   }
 
-  function loadAuthV3Styles() {
-    if (document.querySelector('link[data-motoja-auth-v3]')) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'auth-v3.css?v=6';
-    link.dataset.motojaAuthV3 = '1';
-    document.head.appendChild(link);
+  function loadAuthStyles() {
+    if (!document.querySelector('link[data-motoja-auth-v3]')) {
+      const authLink = document.createElement('link');
+      authLink.rel = 'stylesheet';
+      authLink.href = 'auth-v3.css?v=7';
+      authLink.dataset.motojaAuthV3 = '1';
+      document.head.appendChild(authLink);
+    }
+    if (!document.querySelector('link[data-motoja-signup-v4]')) {
+      const signupLink = document.createElement('link');
+      signupLink.rel = 'stylesheet';
+      signupLink.href = 'signup-v4.css?v=1';
+      signupLink.dataset.motojaSignupV4 = '1';
+      document.head.appendChild(signupLink);
+    }
   }
 
   disableLegacyWelcomeFlow();
   loadInitialFlow();
-  loadAuthV3Styles();
+  loadAuthStyles();
 
   async function gateInitialRender() {
     const phone = document.querySelector('.phone');
@@ -103,22 +109,39 @@
     }
   }
 
+  function setAuthHeading(title, subtitle) {
+    const titleElement = $('.mj-auth-copy h2');
+    const subtitleElement = $('.mj-auth-copy p');
+    if (titleElement) titleElement.textContent = title;
+    if (subtitleElement) subtitleElement.textContent = subtitle;
+  }
+
   function showLoginUi() {
+    const authView = $('#authView');
+    authView?.classList.remove('mj-signup-mode');
     $('#showLogin')?.click();
     $('.mj-social-auth')?.classList.remove('hidden');
     $('.mj-auth-bottom')?.classList.remove('hidden');
     $('.mj-auth-signup-title')?.classList.add('hidden');
     $('.mj-auth-back')?.classList.add('hidden');
+    setAuthHeading('Bem-vindo de volta!', 'Faça login para continuar');
     setAuthMessage('');
   }
 
   function showSignupUi() {
+    const authView = $('#authView');
+    authView?.classList.add('mj-signup-mode');
     $('#showSignup')?.click();
     $('.mj-social-auth')?.classList.add('hidden');
     $('.mj-auth-bottom')?.classList.add('hidden');
     $('.mj-auth-signup-title')?.classList.remove('hidden');
     $('.mj-auth-back')?.classList.remove('hidden');
+    setAuthHeading('Crie sua conta', 'Leva menos de um minuto para começar');
     setAuthMessage('');
+    $('#signupName')?.setAttribute('autocomplete', 'name');
+    $('#signupPhone')?.setAttribute('autocomplete', 'tel');
+    $('#signupEmail')?.setAttribute('autocomplete', 'email');
+    $('#signupPassword')?.setAttribute('autocomplete', 'new-password');
   }
 
   function ensureAuthV3Ui() {
@@ -161,11 +184,15 @@
       signupTitle.className = 'mj-auth-signup-title hidden';
       signupTitle.textContent = 'Criar sua conta';
       signupForm.insertAdjacentElement('beforebegin', signupTitle);
+      const note = document.createElement('p');
+      note.className = 'mj-signup-note';
+      note.textContent = 'Ao criar sua conta, você concorda com os termos e a política de privacidade do MotoJá.';
+      signupForm.insertAdjacentElement('afterend', note);
       const back = document.createElement('button');
       back.type = 'button';
       back.className = 'mj-auth-back hidden';
-      back.textContent = '← Voltar para entrar';
-      signupForm.insertAdjacentElement('afterend', back);
+      back.textContent = 'Voltar para entrar';
+      note.insertAdjacentElement('afterend', back);
       back.addEventListener('click', showLoginUi);
     }
 
