@@ -6,7 +6,7 @@
     if (document.querySelector('link[data-motoja-auth-v3]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'auth-v3.css?v=3';
+    link.href = 'auth-v3.css?v=4';
     link.dataset.motojaAuthV3 = '1';
     document.head.appendChild(link);
   }
@@ -161,7 +161,17 @@
     forgotButton.type = 'button';
     forgotButton.className = 'secondary-button';
     forgotButton.textContent = 'Esqueci minha senha';
-    loginForm.appendChild(forgotButton);
+    forgotButton.style.position = 'static';
+    forgotButton.style.justifySelf = 'end';
+    forgotButton.style.width = 'auto';
+    forgotButton.style.margin = '-2px 2px 0 0';
+    forgotButton.style.minHeight = '34px';
+    forgotButton.style.padding = '0';
+    forgotButton.style.background = 'transparent';
+    forgotButton.style.boxShadow = 'none';
+    const loginSubmit = loginForm.querySelector('.primary-button');
+    if (loginSubmit) loginForm.insertBefore(forgotButton, loginSubmit);
+    else loginForm.appendChild(forgotButton);
 
     const recoveryForm = document.createElement('form');
     recoveryForm.id = 'recoveryForm';
