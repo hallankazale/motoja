@@ -1,14 +1,31 @@
 (() => {
   const APP_URL = 'https://hallankazale.github.io/motoja/';
   const $ = (selector) => document.querySelector(selector);
+  const WELCOME_SEEN_KEY = 'motoja_passenger_welcome_seen_v1';
 
   function loadAuthV3Styles() {
     if (document.querySelector('link[data-motoja-auth-v3]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'auth-v3.css?v=4';
+    link.href = 'auth-v3.css?v=5';
     link.dataset.motojaAuthV3 = '1';
     document.head.appendChild(link);
+  }
+
+  function forceWelcomeFlow() {
+    const welcome = document.getElementById('mjWelcome');
+    if (!welcome) return;
+
+    try {
+      window.localStorage.removeItem(WELCOME_SEEN_KEY);
+    } catch (error) {
+      console.warn('Não foi possível limpar o estado da tela inicial.', error);
+    }
+
+    welcome.style.setProperty('display', 'flex', 'important');
+    welcome.classList.remove('is-leaving');
+    welcome.classList.add('is-visible');
+    welcome.setAttribute('aria-hidden', 'false');
   }
 
   loadAuthV3Styles();
@@ -239,9 +256,11 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    forceWelcomeFlow();
     ensureAuthV3Ui();
     ensureRecoveryUi();
   });
+
   client.auth.onAuthStateChange((event) => { if (event === 'PASSWORD_RECOVERY') showUpdatePassword(); });
   if (new URLSearchParams(location.search).get('recovery') === '1') window.setTimeout(showUpdatePassword, 350);
 })();
