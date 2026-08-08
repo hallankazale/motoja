@@ -1,37 +1,76 @@
-/* MotoJa - Tela 3: autenticacao mobile */
-html.motoja-auth-ready #authView.active-screen{min-height:100svh;padding:0!important;background:#071019;color:#f8fafc;overflow:hidden;position:relative}
-html.motoja-auth-ready #authView.active-screen::before{content:"";position:fixed;inset:-20%;pointer-events:none;background:radial-gradient(circle at 82% 8%,rgba(15,140,255,.28),transparent 27%),radial-gradient(circle at 8% 80%,rgba(32,216,160,.18),transparent 30%)}
-html.motoja-auth-ready #authView .mj-auth-v3{position:relative;z-index:1;width:min(100%,460px);min-height:100svh;margin:0 auto;display:flex;flex-direction:column;padding:calc(26px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom))}
-html.motoja-auth-ready #authView .mj-auth-brand{display:flex;align-items:center;gap:11px;font-size:25px;font-weight:900;letter-spacing:-.045em}
-html.motoja-auth-ready #authView .mj-auth-mark{display:grid;place-items:center;width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#0f8cff,#20d8a0);box-shadow:0 12px 30px rgba(15,140,255,.25)}
-html.motoja-auth-ready #authView .mj-auth-mark::before{content:"";width:23px;height:16px;border:3px solid #fff;border-radius:13px 13px 7px 7px;transform:skewX(-8deg)}
-html.motoja-auth-ready #authView .mj-auth-copy{margin-top:clamp(42px,9vh,88px)}
-html.motoja-auth-ready #authView .mj-auth-copy h2{margin:0;color:#fff;font-size:clamp(34px,9vw,46px);line-height:1.02;letter-spacing:-.055em}
-html.motoja-auth-ready #authView .mj-auth-copy p{margin:13px 0 0;max-width:360px;color:#9aa9ba;font-size:15px;line-height:1.55}
+/* MotoJa - Tela 3: login mobile inspirado na referencia aprovada */
+html.motoja-auth-ready #authView.active-screen{min-height:100svh;padding:0!important;background:#020b1b;color:#f8fafc;overflow-x:hidden;position:relative}
+html.motoja-auth-ready #authView.active-screen::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 16% 4%,rgba(20,82,255,.20),transparent 31%),radial-gradient(circle at 90% 12%,rgba(0,72,210,.16),transparent 27%),radial-gradient(circle at 5% 82%,rgba(0,213,162,.13),transparent 31%),linear-gradient(180deg,#061433 0%,#020b1b 56%,#020817 100%)}
+html.motoja-auth-ready #authView.active-screen::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.52;background:linear-gradient(132deg,transparent 0 7%,rgba(18,111,255,.58) 7.15% 7.45%,transparent 7.6% 91%,rgba(0,226,159,.45) 91.15% 91.4%,transparent 91.55%)}
+html.motoja-auth-ready #authView .mj-auth-v3{position:relative;z-index:1;width:min(100%,460px);min-height:100svh;margin:0 auto;display:flex;flex-direction:column;padding:calc(34px + env(safe-area-inset-top)) 28px calc(28px + env(safe-area-inset-bottom))}
 html.motoja-auth-ready #authView .hero-card{display:none!important}
-html.motoja-auth-ready #authView .auth-tabs{margin:28px 0 18px;padding:4px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px)}
-html.motoja-auth-ready #authView .tab{min-height:44px;border-radius:12px;background:transparent;color:#91a1b3;font-size:14px}
-html.motoja-auth-ready #authView .tab.active{color:#fff;background:linear-gradient(100deg,rgba(15,140,255,.95),rgba(32,216,160,.85));box-shadow:0 8px 22px rgba(15,140,255,.17)}
-html.motoja-auth-ready #authView .form-card{gap:14px;margin:0;padding:0;background:transparent;box-shadow:none}
-html.motoja-auth-ready #authView .form-card label{gap:8px;color:#c8d3df;font-size:13px;font-weight:750}
-html.motoja-auth-ready #authView input,html.motoja-auth-ready #authView select{min-height:54px;border:1px solid rgba(255,255,255,.11);border-radius:16px;background:rgba(255,255,255,.065);color:#fff;padding:0 16px;box-shadow:none}
-html.motoja-auth-ready #authView input::placeholder{color:#708092}
-html.motoja-auth-ready #authView input:focus,html.motoja-auth-ready #authView select:focus{border-color:#19a9da;box-shadow:0 0 0 3px rgba(15,140,255,.13)}
-html.motoja-auth-ready #authView select option{color:#111827}
-html.motoja-auth-ready #authView .primary-button{min-height:56px;margin-top:3px;border-radius:17px;background:linear-gradient(100deg,#0f8cff,#20d8a0);font-size:16px;font-weight:900;box-shadow:0 14px 30px rgba(15,140,255,.23)}
-html.motoja-auth-ready #authView #forgotPasswordButton{min-height:38px;border:0;background:transparent;color:#70c7ff;font-size:13px;font-weight:800;text-align:right;padding:0;justify-self:end}
-.mj-social-auth{display:grid;gap:10px;margin-top:22px}
-.mj-auth-divider{display:flex;align-items:center;gap:12px;margin:2px 0 4px;color:#6f8092;font-size:12px;font-weight:700}
-.mj-auth-divider::before,.mj-auth-divider::after{content:"";height:1px;flex:1;background:rgba(255,255,255,.1)}
-.mj-social-button{width:100%;min-height:54px;display:flex;align-items:center;justify-content:center;gap:11px;border:1px solid rgba(255,255,255,.12);border-radius:16px;font-size:15px;font-weight:850;transition:transform .15s ease,border-color .15s ease,background .15s ease}
-.mj-social-button:active{transform:scale(.985)}
-.mj-social-button--google{background:#fff;color:#101828;border-color:#fff}
-.mj-social-button--apple{background:#020408;color:#fff;border-color:rgba(255,255,255,.18)}
-.mj-social-icon{display:grid;place-items:center;width:22px;height:22px;font-size:19px;font-weight:900;line-height:1}
-.mj-social-button--google .mj-social-icon{font-family:Arial,sans-serif;color:#4285f4}
-.mj-auth-legal{margin:18px auto 0;max-width:330px;color:#647589;font-size:11px;line-height:1.5;text-align:center}
-html.motoja-auth-ready #authView #authMessage{position:relative;margin:14px 0 0;min-height:20px;color:#8ee7c9;font-size:12px;text-align:center}
-html.motoja-auth-ready #authView #authMessage.error{color:#ff9aa5}
-html.motoja-auth-ready #authView #recoveryForm,html.motoja-auth-ready #authView #updatePasswordForm{margin-top:20px;padding:18px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055)}
-@media(max-width:520px){.topbar:has(+ #authView.active-screen){display:none}.app-shell:has(#authView.active-screen){display:block;padding:0;background:#071019}.phone:has(#authView.active-screen){min-height:100svh;background:#071019}.mj-auth-v3{max-width:none}}
-@media(prefers-reduced-motion:reduce){.mj-social-button{transition:none}}
+
+/* Marca */
+.mj-auth-heading{text-align:center}
+html.motoja-auth-ready #authView .mj-auth-brand{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:8px;font-size:37px;font-weight:950;font-style:italic;letter-spacing:-.065em;color:#fff;text-shadow:0 8px 26px rgba(0,89,255,.22)}
+html.motoja-auth-ready #authView .mj-auth-brand-name strong{font-weight:950;color:#fff}.mj-auth-brand-name em{font-style:italic;color:#12df9d}
+html.motoja-auth-ready #authView .mj-auth-mark{position:relative;display:block;width:58px;height:48px;border-radius:18px 24px 17px 24px;background:linear-gradient(145deg,#087fff,#1ce29f);box-shadow:0 12px 28px rgba(0,123,255,.26);transform:skewX(-8deg)}
+html.motoja-auth-ready #authView .mj-auth-mark::before{content:"";position:absolute;width:31px;height:20px;left:16px;top:10px;border:4px solid #021128;border-left-color:transparent;border-radius:20px 20px 12px 10px;transform:skewX(8deg)}
+html.motoja-auth-ready #authView .mj-auth-mark::after{content:"";position:absolute;width:21px;height:4px;left:-7px;top:21px;border-radius:99px;background:#14d89d;box-shadow:-5px -9px 0 -1px #178dff,-2px 9px 0 -1px #0fbccd}
+html.motoja-auth-ready #authView .mj-auth-copy{margin-top:54px;text-align:center}
+html.motoja-auth-ready #authView .mj-auth-copy h2{margin:0;color:#fff;font-size:clamp(32px,8.7vw,42px);line-height:1.05;font-weight:900;letter-spacing:-.045em}
+html.motoja-auth-ready #authView .mj-auth-copy p{margin:13px auto 0;max-width:340px;color:#aebbd0;font-size:16px;line-height:1.45}
+
+/* Tabs originais ficam funcionais no DOM, mas a navegacao visual e feita pelos links da nova UI */
+html.motoja-auth-ready #authView .auth-tabs{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
+
+/* Formulario */
+html.motoja-auth-ready #authView #loginForm{margin-top:36px}
+html.motoja-auth-ready #authView .form-card{gap:14px;margin-bottom:0;padding:0;background:transparent;box-shadow:none}
+html.motoja-auth-ready #authView .form-card label{position:relative;display:block;color:transparent;font-size:0;font-weight:700}
+html.motoja-auth-ready #authView input,html.motoja-auth-ready #authView select{width:100%;min-height:64px;border:1px solid rgba(137,164,199,.28);border-radius:17px;background:rgba(5,15,35,.69);color:#f7fbff;padding:0 50px 0 54px;font-size:16px;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.025);transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+html.motoja-auth-ready #authView input::placeholder{color:#8190a8}
+html.motoja-auth-ready #authView input:focus,html.motoja-auth-ready #authView select:focus{border-color:#119cff;background:rgba(5,18,43,.86);box-shadow:0 0 0 3px rgba(17,156,255,.12),0 10px 26px rgba(0,0,0,.12)}
+html.motoja-auth-ready #authView select option{color:#101828}
+.mj-field-icon{position:absolute;z-index:2;left:18px;top:50%;width:22px;height:22px;transform:translateY(-50%);display:grid;place-items:center;color:#99a9bf;pointer-events:none}
+.mj-field-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.mj-password-toggle{position:absolute;z-index:3;right:12px;top:50%;width:38px;height:38px;transform:translateY(-50%);border:0;border-radius:12px;background:transparent;color:#97a8c0;display:grid;place-items:center;padding:0}
+.mj-password-toggle svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+html.motoja-auth-ready #authView .primary-button{width:100%;min-height:60px;margin-top:20px;border:0;border-radius:17px;background:linear-gradient(100deg,#0e79ff 0%,#05aee4 48%,#0bdc92 100%);color:#fff;font-size:18px;font-weight:900;box-shadow:0 16px 32px rgba(0,120,255,.22);transition:transform .15s ease,filter .15s ease}
+html.motoja-auth-ready #authView .primary-button:active{transform:scale(.987);filter:brightness(.96)}
+html.motoja-auth-ready #authView #forgotPasswordButton{position:absolute;right:0;bottom:72px;min-height:34px;border:0;background:transparent;color:#138dff;font-size:14px;font-weight:800;padding:0;text-align:right}
+html.motoja-auth-ready #authView #loginForm{position:relative;padding-bottom:30px}
+
+/* Login social */
+.mj-social-auth{display:grid;gap:12px;margin-top:8px}
+.mj-auth-divider{display:flex;align-items:center;gap:14px;margin:3px 0 6px;color:#a8b3c4;font-size:13px;font-weight:700}
+.mj-auth-divider::before,.mj-auth-divider::after{content:"";height:1px;flex:1;background:rgba(172,190,214,.24)}
+.mj-social-button{width:100%;min-height:60px;display:flex;align-items:center;justify-content:flex-start;gap:18px;border:1px solid #dbe1e8;border-radius:16px;padding:0 24px;background:#fff;color:#091326;font-size:16px;font-weight:750;box-shadow:0 8px 20px rgba(0,0,0,.10);transition:transform .15s ease,box-shadow .15s ease}
+.mj-social-button:active{transform:scale(.987);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.mj-social-icon{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center}
+.mj-social-icon img{display:block;width:25px;height:25px;object-fit:contain}
+.mj-social-icon--apple{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI Symbol",sans-serif;font-size:31px;line-height:1;color:#000;transform:translateY(-1px)}
+.mj-social-label{flex:1;text-align:center;margin-right:48px}
+.mj-auth-bottom{margin-top:26px;text-align:center;color:#a9b5c6;font-size:14px}
+.mj-auth-bottom button{border:0;background:transparent;color:#168eff;font-weight:850;font-size:14px;padding:7px 4px}
+.mj-auth-legal{margin:16px auto 0;max-width:330px;color:#61738d;font-size:10px;line-height:1.45;text-align:center}
+html.motoja-auth-ready #authView #authMessage{position:relative;margin:13px 0 0;min-height:18px;color:#7ce7c4;font-size:12px;text-align:center}
+html.motoja-auth-ready #authView #authMessage.error{color:#ff9aaa}
+
+/* Cadastro e recuperacao mantem a mesma identidade */
+html.motoja-auth-ready #authView #signupForm,html.motoja-auth-ready #authView #recoveryForm,html.motoja-auth-ready #authView #updatePasswordForm{margin-top:28px;padding:18px;border:1px solid rgba(139,164,199,.17);border-radius:20px;background:rgba(4,14,33,.72);backdrop-filter:blur(12px)}
+html.motoja-auth-ready #authView #signupForm label,html.motoja-auth-ready #authView #recoveryForm label,html.motoja-auth-ready #authView #updatePasswordForm label{display:grid;gap:7px;color:#b9c7d8;font-size:12px}
+html.motoja-auth-ready #authView #signupForm input,html.motoja-auth-ready #authView #signupForm select,html.motoja-auth-ready #authView #recoveryForm input,html.motoja-auth-ready #authView #updatePasswordForm input{padding:0 15px;min-height:52px}
+.mj-auth-signup-title{margin:28px 0 4px;color:#fff;text-align:center;font-size:27px;font-weight:900;letter-spacing:-.035em}
+.mj-auth-back{width:100%;margin-top:10px;border:0;background:transparent;color:#24a5ff;font-size:14px;font-weight:800;padding:10px}
+
+@media(max-width:520px){
+  .topbar:has(+ #authView.active-screen){display:none}
+  .app-shell:has(#authView.active-screen){display:block;padding:0;background:#020b1b}
+  .phone:has(#authView.active-screen){width:100%;min-height:100svh;border-radius:0;background:#020b1b;box-shadow:none}
+  html.motoja-auth-ready #authView .mj-auth-v3{max-width:none;padding-left:24px;padding-right:24px}
+}
+@media(max-height:740px){
+  html.motoja-auth-ready #authView .mj-auth-v3{padding-top:calc(20px + env(safe-area-inset-top))}
+  html.motoja-auth-ready #authView .mj-auth-copy{margin-top:30px}
+  html.motoja-auth-ready #authView #loginForm{margin-top:24px}
+  html.motoja-auth-ready #authView input{min-height:56px}
+  .mj-social-button{min-height:54px}
+  .mj-auth-bottom{margin-top:16px}
+}
+@media(prefers-reduced-motion:reduce){.mj-social-button,html.motoja-auth-ready #authView .primary-button,html.motoja-auth-ready #authView input{transition:none}}
