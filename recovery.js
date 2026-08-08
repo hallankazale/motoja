@@ -6,7 +6,7 @@
     if (document.querySelector('link[data-motoja-auth-v3]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'auth-v3.css?v=2';
+    link.href = 'auth-v3.css?v=3';
     link.dataset.motojaAuthV3 = '1';
     document.head.appendChild(link);
   }
