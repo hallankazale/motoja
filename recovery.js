@@ -1,15 +1,6 @@
 (() => {
   const APP_URL = 'https://hallankazale.github.io/motoja/';
   const $ = (selector) => document.querySelector(selector);
-  const welcomeSeenKey = 'motoja_passenger_welcome_seen_v1';
-
-  // O fluxo inicial do MotoJá deve ser sempre: splash -> boas-vindas -> login/app.
-  // Remove a preferência antiga que fazia a tela de boas-vindas ser ignorada.
-  try {
-    window.localStorage.removeItem(welcomeSeenKey);
-  } catch (error) {
-    console.warn('Não foi possível limpar o estado antigo das boas-vindas.', error);
-  }
 
   /**
    * Evita que a tela legada de login apareça entre a splash e a tela de boas-vindas.
@@ -21,6 +12,7 @@
     if (!splash || !welcome) return;
 
     const prepareWelcome = () => {
+      welcome.classList.remove('is-leaving');
       welcome.classList.add('is-visible');
       welcome.setAttribute('aria-hidden', 'false');
     };
