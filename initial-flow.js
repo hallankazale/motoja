@@ -32,13 +32,16 @@
   }
 
   function closeSplash() {
-    if (!splash || splashClosing) return;
+    if (splashClosing) return;
     splashClosing = true;
 
-    // A Tela 2 é preparada antes da splash desaparecer para não revelar o login por baixo.
+    // A Tela 2 sempre é preparada primeiro. Assim o login nunca aparece entre as telas.
     showWelcome();
-    splash.classList.add('is-leaving');
 
+    // Se a splash antiga já tiver sido removida por outro carregamento, a Tela 2 continua funcionando.
+    if (!splash || !splash.isConnected) return;
+
+    splash.classList.add('is-leaving');
     window.setTimeout(() => splash.remove(), TRANSITION_MS);
   }
 
@@ -46,7 +49,7 @@
   loginButton?.addEventListener('click', closeWelcome);
 
   if (document.readyState === 'complete') {
-    window.setTimeout(closeSplash, SPLASH_EXIT_DELAY_MS);
+    closeSplash();
   } else {
     window.addEventListener('load', () => window.setTimeout(closeSplash, SPLASH_EXIT_DELAY_MS), { once: true });
   }
