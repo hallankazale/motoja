@@ -1,33 +1,38 @@
 (() => {
   const APP_URL = 'https://hallankazale.github.io/motoja/';
   const $ = (selector) => document.querySelector(selector);
-  const WELCOME_SEEN_KEY = 'motoja_passenger_welcome_seen_v1';
+  const LEGACY_WELCOME_SEEN_KEY = 'motoja_passenger_welcome_seen_v1';
+
+  function disableLegacyWelcomeFlow() {
+    try {
+      // A lógica inline antiga usa esta chave para decidir se deve abrir a Tela 2.
+      // Mantemos a chave marcada para impedir que o fluxo legado concorra com initial-flow.js.
+      window.localStorage.setItem(LEGACY_WELCOME_SEEN_KEY, '1');
+    } catch (error) {
+      console.warn('Não foi possível neutralizar o fluxo inicial legado.', error);
+    }
+  }
+
+  function loadInitialFlow() {
+    if (document.querySelector('script[data-motoja-initial-flow]')) return;
+    const script = document.createElement('script');
+    script.src = 'initial-flow.js?v=2';
+    script.defer = true;
+    script.dataset.motojaInitialFlow = '1';
+    document.head.appendChild(script);
+  }
 
   function loadAuthV3Styles() {
     if (document.querySelector('link[data-motoja-auth-v3]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'auth-v3.css?v=5';
+    link.href = 'auth-v3.css?v=6';
     link.dataset.motojaAuthV3 = '1';
     document.head.appendChild(link);
   }
 
-  function forceWelcomeFlow() {
-    const welcome = document.getElementById('mjWelcome');
-    if (!welcome) return;
-
-    try {
-      window.localStorage.removeItem(WELCOME_SEEN_KEY);
-    } catch (error) {
-      console.warn('Não foi possível limpar o estado da tela inicial.', error);
-    }
-
-    welcome.style.setProperty('display', 'flex', 'important');
-    welcome.classList.remove('is-leaving');
-    welcome.classList.add('is-visible');
-    welcome.setAttribute('aria-hidden', 'false');
-  }
-
+  disableLegacyWelcomeFlow();
+  loadInitialFlow();
   loadAuthV3Styles();
 
   async function gateInitialRender() {
@@ -256,7 +261,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    forceWelcomeFlow();
     ensureAuthV3Ui();
     ensureRecoveryUi();
   });
