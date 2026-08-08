@@ -32,8 +32,7 @@
 
   /**
    * Mantém a interface legada invisível enquanto o Supabase restaura a sessão.
-   * Sem este bloqueio, o HTML nasce com authView ativo e o login antigo aparece
-   * por alguns milissegundos antes de o app descobrir que já existe uma sessão.
+   * O CSS só permite que authView apareça depois de motoja-auth-ready.
    */
   async function gateInitialRender() {
     const phone = document.querySelector('.phone');
@@ -49,6 +48,7 @@
     } catch (error) {
       console.warn('Não foi possível restaurar a sessão inicial.', error);
     } finally {
+      document.documentElement.classList.add('motoja-auth-ready');
       phone.style.transition = 'opacity 180ms ease';
       phone.style.visibility = 'visible';
       phone.style.opacity = '1';
@@ -155,6 +155,7 @@
     $('#updatePasswordForm')?.classList.remove('hidden');
     $('#authView')?.classList.add('active-screen');
     $('#appView')?.classList.remove('active-screen');
+    document.documentElement.classList.add('motoja-auth-ready');
     setAuthMessage('Link validado. Crie sua nova senha.');
   }
 
