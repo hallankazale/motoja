@@ -6,17 +6,13 @@
     if (document.querySelector('link[data-motoja-auth-v3]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'auth-v3.css?v=1';
+    link.href = 'auth-v3.css?v=2';
     link.dataset.motojaAuthV3 = '1';
     document.head.appendChild(link);
   }
 
   loadAuthV3Styles();
 
-  /**
-   * Mantém a interface legada invisível enquanto o Supabase restaura a sessão.
-   * O CSS só permite que authView apareça depois de motoja-auth-ready.
-   */
   async function gateInitialRender() {
     const phone = document.querySelector('.phone');
     if (!phone) return;
@@ -52,9 +48,7 @@
     setAuthMessage(provider === 'google' ? 'Abrindo Google...' : 'Abrindo Apple...');
     const { error } = await client.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: APP_URL,
-      },
+      options: { redirectTo: APP_URL },
     });
 
     if (error) {
@@ -63,45 +57,133 @@
     }
   }
 
+  function fieldIcon(type) {
+    if (type === 'mail') {
+      return '<span class="mj-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg></span>';
+    }
+    return '<span class="mj-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path><path d="M12 15v2"></path></svg></span>';
+  }
+
+  function ensureFieldDecorations() {
+    const email = $('#loginEmail');
+    const password = $('#loginPassword');
+    if (!email || !password) return;
+
+    email.placeholder = 'E-mail';
+    password.placeholder = 'Senha';
+
+    const emailLabel = email.closest('label');
+    const passwordLabel = password.closest('label');
+
+    if (emailLabel && !emailLabel.querySelector('.mj-field-icon')) {
+      emailLabel.insertAdjacentHTML('beforeend', fieldIcon('mail'));
+    }
+
+    if (passwordLabel && !passwordLabel.querySelector('.mj-field-icon')) {
+      passwordLabel.insertAdjacentHTML('beforeend', fieldIcon('lock'));
+    }
+
+    if (passwordLabel && !passwordLabel.querySelector('.mj-password-toggle')) {
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'mj-password-toggle';
+      toggle.setAttribute('aria-label', 'Mostrar senha');
+      toggle.innerHTML = '<svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.6"></circle></svg>';
+      toggle.addEventListener('click', () => {
+        const showing = password.type === 'text';
+        password.type = showing ? 'password' : 'text';
+        toggle.setAttribute('aria-label', showing ? 'Mostrar senha' : 'Ocultar senha');
+      });
+      passwordLabel.appendChild(toggle);
+    }
+  }
+
+  function showLoginUi() {
+    $('#showLogin')?.click();
+    $('.mj-social-auth')?.classList.remove('hidden');
+    $('.mj-auth-bottom')?.classList.remove('hidden');
+    $('.mj-auth-signup-title')?.classList.add('hidden');
+    $('.mj-auth-back')?.classList.add('hidden');
+    setAuthMessage('');
+  }
+
+  function showSignupUi() {
+    $('#showSignup')?.click();
+    $('.mj-social-auth')?.classList.add('hidden');
+    $('.mj-auth-bottom')?.classList.add('hidden');
+    $('.mj-auth-signup-title')?.classList.remove('hidden');
+    $('.mj-auth-back')?.classList.remove('hidden');
+    setAuthMessage('');
+  }
+
   function ensureAuthV3Ui() {
     const authView = $('#authView');
     const loginForm = $('#loginForm');
+    const signupForm = $('#signupForm');
     if (!authView || !loginForm || authView.dataset.authV3Ready === '1') return;
 
     const wrapper = document.createElement('div');
     wrapper.className = 'mj-auth-v3';
 
-    while (authView.firstChild) {
-      wrapper.appendChild(authView.firstChild);
-    }
+    while (authView.firstChild) wrapper.appendChild(authView.firstChild);
     authView.appendChild(wrapper);
 
     const heading = document.createElement('div');
+    heading.className = 'mj-auth-heading';
     heading.innerHTML = `
-      <div class="mj-auth-brand"><span class="mj-auth-mark" aria-hidden="true"></span><span>MotoJá</span></div>
+      <div class="mj-auth-brand" aria-label="MotoJá">
+        <span class="mj-auth-mark" aria-hidden="true"></span>
+        <span class="mj-auth-brand-name"><strong>Moto</strong><em>Já</em></span>
+      </div>
       <div class="mj-auth-copy">
-        <h2>Bem-vindo de volta.</h2>
-        <p>Entre para pedir uma corrida, acompanhar seu motociclista e gerenciar sua conta com segurança.</p>
+        <h2>Bem-vindo de volta!</h2>
+        <p>Faça login para continuar</p>
       </div>
     `;
     wrapper.insertBefore(heading, wrapper.firstChild);
+
+    ensureFieldDecorations();
 
     const social = document.createElement('div');
     social.className = 'mj-social-auth';
     social.innerHTML = `
       <div class="mj-auth-divider"><span>ou continue com</span></div>
-      <button id="googleSignInButton" class="mj-social-button mj-social-button--google" type="button">
-        <span class="mj-social-icon" aria-hidden="true">G</span><span>Continuar com Google</span>
+      <button id="googleSignInButton" class="mj-social-button" type="button">
+        <span class="mj-social-icon" aria-hidden="true"><img src="https://developers.google.com/identity/images/g-logo.png" alt=""></span>
+        <span class="mj-social-label">Continuar com Google</span>
       </button>
-      <button id="appleSignInButton" class="mj-social-button mj-social-button--apple" type="button">
-        <span class="mj-social-icon" aria-hidden="true"></span><span>Continuar com Apple</span>
+      <button id="appleSignInButton" class="mj-social-button" type="button">
+        <span class="mj-social-icon mj-social-icon--apple" aria-hidden="true">●</span>
+        <span class="mj-social-label">Continuar com Apple</span>
       </button>
-      <p class="mj-auth-legal">Ao continuar, você concorda com os Termos de Uso e a Política de Privacidade do MotoJá.</p>
     `;
     loginForm.insertAdjacentElement('afterend', social);
 
+    const appleIcon = social.querySelector('.mj-social-icon--apple');
+    if (appleIcon) appleIcon.textContent = '';
+
+    const bottom = document.createElement('div');
+    bottom.className = 'mj-auth-bottom';
+    bottom.innerHTML = 'Ainda não tem conta? <button id="mjCreateAccount" type="button">Criar conta</button>';
+    social.insertAdjacentElement('afterend', bottom);
+
+    if (signupForm) {
+      const signupTitle = document.createElement('h3');
+      signupTitle.className = 'mj-auth-signup-title hidden';
+      signupTitle.textContent = 'Criar sua conta';
+      signupForm.insertAdjacentElement('beforebegin', signupTitle);
+
+      const back = document.createElement('button');
+      back.type = 'button';
+      back.className = 'mj-auth-back hidden';
+      back.textContent = '← Voltar para entrar';
+      signupForm.insertAdjacentElement('afterend', back);
+      back.addEventListener('click', showLoginUi);
+    }
+
     $('#googleSignInButton')?.addEventListener('click', () => signInWithProvider('google'));
     $('#appleSignInButton')?.addEventListener('click', () => signInWithProvider('apple'));
+    $('#mjCreateAccount')?.addEventListener('click', showSignupUi);
 
     authView.dataset.authV3Ready = '1';
   }
@@ -125,7 +207,7 @@
       <p>Informe o e-mail cadastrado. Você receberá um link para criar uma nova senha.</p>
       <label>E-mail<input id="recoveryEmail" type="email" required autocomplete="email"></label>
       <button class="primary-button" type="submit">Enviar link de recuperação</button>
-      <button id="cancelRecoveryButton" class="secondary-button" type="button">Voltar</button>
+      <button id="cancelRecoveryButton" class="mj-auth-back" type="button">Voltar</button>
     `;
     loginForm.insertAdjacentElement('afterend', recoveryForm);
 
@@ -142,17 +224,19 @@
     recoveryForm.insertAdjacentElement('afterend', updateForm);
 
     forgotButton.addEventListener('click', () => {
-      $('#loginForm').classList.add('hidden');
-      $('#signupForm').classList.add('hidden');
-      $('#recoveryForm').classList.remove('hidden');
+      $('#loginForm')?.classList.add('hidden');
+      $('#signupForm')?.classList.add('hidden');
+      $('#recoveryForm')?.classList.remove('hidden');
       $('.mj-social-auth')?.classList.add('hidden');
+      $('.mj-auth-bottom')?.classList.add('hidden');
       setAuthMessage('');
     });
 
-    $('#cancelRecoveryButton').addEventListener('click', () => {
-      $('#recoveryForm').classList.add('hidden');
-      $('#loginForm').classList.remove('hidden');
+    $('#cancelRecoveryButton')?.addEventListener('click', () => {
+      $('#recoveryForm')?.classList.add('hidden');
+      $('#loginForm')?.classList.remove('hidden');
       $('.mj-social-auth')?.classList.remove('hidden');
+      $('.mj-auth-bottom')?.classList.remove('hidden');
       setAuthMessage('');
     });
 
@@ -163,10 +247,7 @@
       const { error } = await client.auth.resetPasswordForEmail(email, {
         redirectTo: `${APP_URL}?recovery=1`,
       });
-      setAuthMessage(
-        error ? error.message : 'Link enviado. Abra o e-mail e toque no botão para criar uma nova senha.',
-        Boolean(error),
-      );
+      setAuthMessage(error ? error.message : 'Link enviado. Abra o e-mail e toque no botão para criar uma nova senha.', Boolean(error));
     });
 
     updateForm.addEventListener('submit', async (event) => {
@@ -184,8 +265,9 @@
       }
       setAuthMessage('Senha alterada com sucesso. Você já pode entrar com a nova senha.');
       updateForm.classList.add('hidden');
-      $('#loginForm').classList.remove('hidden');
+      $('#loginForm')?.classList.remove('hidden');
       $('.mj-social-auth')?.classList.remove('hidden');
+      $('.mj-auth-bottom')?.classList.remove('hidden');
       await client.auth.signOut();
       history.replaceState({}, document.title, APP_URL);
     });
@@ -198,6 +280,7 @@
     $('#recoveryForm')?.classList.add('hidden');
     $('#updatePasswordForm')?.classList.remove('hidden');
     $('.mj-social-auth')?.classList.add('hidden');
+    $('.mj-auth-bottom')?.classList.add('hidden');
     $('#authView')?.classList.add('active-screen');
     $('#appView')?.classList.remove('active-screen');
     document.documentElement.classList.add('motoja-auth-ready');
