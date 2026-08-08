@@ -27,7 +27,11 @@
     welcome.setAttribute('aria-hidden', 'true');
     window.setTimeout(() => {
       welcome.remove();
-      document.getElementById('loginEmail')?.focus();
+      // Não focar automaticamente nos campos de login.
+      // Em Android/Chrome isso abre o gerenciador de senhas sem o usuário solicitar.
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }, 380);
   }
 
