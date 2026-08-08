@@ -3,6 +3,34 @@
   const $ = (selector) => document.querySelector(selector);
 
   /**
+   * Evita que a tela legada de login apareça entre a splash e a tela de boas-vindas.
+   * Quando a splash começa a desaparecer, a segunda tela já fica pronta por baixo.
+   */
+  function shieldSplashTransition() {
+    const splash = document.getElementById('mjSplash');
+    const welcome = document.getElementById('mjWelcome');
+    if (!splash || !welcome) return;
+
+    const welcomeSeenKey = 'motoja_passenger_welcome_seen_v1';
+    const prepareWelcome = () => {
+      if (window.localStorage.getItem(welcomeSeenKey) === '1') return;
+      welcome.classList.add('is-visible');
+      welcome.setAttribute('aria-hidden', 'false');
+    };
+
+    const observer = new MutationObserver(() => {
+      if (splash.classList.contains('is-leaving')) {
+        prepareWelcome();
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(splash, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  shieldSplashTransition();
+
+  /**
    * Mantém a interface legada invisível enquanto o Supabase restaura a sessão.
    * Sem este bloqueio, o HTML nasce com authView ativo e o login antigo aparece
    * por alguns milissegundos antes de o app descobrir que já existe uma sessão.
@@ -17,7 +45,6 @@
 
     try {
       await client.auth.getSession();
-      // Permite que o boot principal aplique perfil e papel antes da pintura.
       await new Promise((resolve) => window.setTimeout(resolve, 80));
     } catch (error) {
       console.warn('Não foi possível restaurar a sessão inicial.', error);
