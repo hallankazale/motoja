@@ -6,7 +6,7 @@
     if (document.querySelector('link[data-motoja-workspace-v2]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'workspace-v2.css?v=1';
+    link.href = 'workspace-v2.css?v=2';
     link.dataset.motojaWorkspaceV2 = '1';
     document.head.appendChild(link);
   }
@@ -122,9 +122,12 @@
     syncModeClasses();
   }
 
-  const observer = new MutationObserver(sync);
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-  document.addEventListener('click', () => window.setTimeout(sync, 80));
-  window.setInterval(sync, 1800);
+  // Observa apenas insercoes/remocoes de elementos. Nao observa classes,
+  // porque syncModeClasses altera classes do body e isso causava loop infinito.
+  const observer = new MutationObserver(() => window.requestAnimationFrame(sync));
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  document.addEventListener('click', () => window.setTimeout(sync, 100));
+  window.setInterval(sync, 2200);
   window.setTimeout(sync, 250);
 })();
