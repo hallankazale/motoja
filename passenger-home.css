@@ -34,6 +34,46 @@ body.passenger-home-active #logoutButton{width:40px;height:40px;margin-left:3px;
 body.passenger-home-active #logoutButton::before{content:"Sair";font-size:12px;font-weight:900}
 body.passenger-home-active #accountBanner{display:none!important}
 body.passenger-home-active .ui-theme-button{display:none!important}
+
+/* Mantém a navegação de perfis acima da home em tela cheia. */
+body.passenger-home-active #modeSelector{
+  position:fixed!important;
+  z-index:1800!important;
+  top:calc(env(safe-area-inset-top) + 82px)!important;
+  left:14px!important;
+  right:14px!important;
+  margin:0!important;
+  padding:5px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important;
+  border:1px solid rgba(255,255,255,.92)!important;
+  border-radius:17px!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 12px 32px rgba(11,18,32,.20)!important;
+  backdrop-filter:blur(16px)!important;
+}
+body.passenger-home-active #modeSelector button{
+  min-height:42px!important;
+  padding:0 6px!important;
+  border:0!important;
+  border-radius:12px!important;
+  background:transparent!important;
+  color:#475569!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+body.passenger-home-active #modeSelector button.active{
+  background:#111827!important;
+  color:#fff!important;
+}
+body.passenger-home-active #modeSelector button.hidden{display:none!important}
+body.passenger-home-active #adminReturnButton{
+  position:fixed!important;
+  z-index:1900!important;
+  top:calc(env(safe-area-inset-top) + 136px)!important;
+  left:14px!important;
+}
 body.passenger-home-active #useMyLocation{
   position:fixed;z-index:720;right:16px;bottom:calc(232px + env(safe-area-inset-bottom));width:54px!important;height:54px!important;min-width:54px!important;
   display:grid;place-items:center;border:2px solid #fff!important;border-radius:18px!important;background:var(--mj-primary)!important;color:#fff!important;
@@ -163,4 +203,5 @@ body.passenger-home-active .leaflet-control-attribution{font-size:8px!important;
   body.passenger-home-active #passengerRequestCard,
   body.passenger-home-active #passengerActiveRide{left:50%;right:auto;width:min(560px,calc(100vw - 20px));transform:translate(-50%,var(--passenger-sheet-offset,0))}
   body.passenger-home-active #useMyLocation{right:calc(50% - 300px)}
+  body.passenger-home-active #modeSelector{left:50%!important;right:auto!important;width:min(620px,calc(100vw - 28px))!important;transform:translateX(-50%)!important}
 }
