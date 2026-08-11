@@ -2,6 +2,15 @@
   const THEME_KEY = 'motoja-theme';
   const $ = (selector) => document.querySelector(selector);
 
+  function loadWorkspaceStyles() {
+    if (document.querySelector('link[data-motoja-workspace-v2]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'workspace-v2.css?v=1';
+    link.dataset.motojaWorkspaceV2 = '1';
+    document.head.appendChild(link);
+  }
+
   function applyTheme(theme) {
     const dark = theme === 'dark';
     document.body.classList.toggle('ui-dark', dark);
@@ -23,7 +32,7 @@
       applyTheme(document.body.classList.contains('ui-dark') ? 'light' : 'dark');
     });
     document.body.appendChild(button);
-    applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
   }
 
   function enhanceTopbar() {
@@ -46,7 +55,7 @@
     if (!card || card.dataset.uiEnhanced) return;
     card.dataset.uiEnhanced = 'true';
     const title = card.querySelector('h2');
-    if (title) title.textContent = 'Para onde vamos?';
+    if (title) title.textContent = 'Para onde você vai?';
     const button = $('#requestRideButton');
     if (button) button.textContent = 'Chamar MotoJá';
     const history = $('#passengerRides')?.closest('.panel-card');
@@ -88,17 +97,34 @@
     observer.observe(message, { childList: true, characterData: true, subtree: true });
   }
 
+  function syncModeClasses() {
+    const appView = $('#appView');
+    const authenticated = Boolean(appView && appView.classList.contains('active-screen'));
+    document.body.classList.toggle('mj-workspace-v2', authenticated);
+    document.body.classList.remove('mj-mode-admin', 'mj-mode-passenger', 'mj-mode-driver');
+    if (!authenticated) return;
+
+    const passenger = $('#passengerView');
+    const driver = $('#driverView');
+    const admin = $('#adminView');
+    if (passenger && !passenger.classList.contains('hidden')) document.body.classList.add('mj-mode-passenger');
+    else if (driver && !driver.classList.contains('hidden')) document.body.classList.add('mj-mode-driver');
+    else if (admin && !admin.classList.contains('hidden')) document.body.classList.add('mj-mode-admin');
+  }
+
   function sync() {
+    loadWorkspaceStyles();
     ensureThemeButton();
     enhanceTopbar();
     enhancePassenger();
     enhanceAdmin();
     improveMessages();
+    syncModeClasses();
   }
 
   const observer = new MutationObserver(sync);
-  observer.observe(document.body, { childList: true, subtree: true });
-  document.addEventListener('click', () => window.setTimeout(sync, 120));
-  window.setInterval(sync, 2500);
-  window.setTimeout(sync, 400);
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  document.addEventListener('click', () => window.setTimeout(sync, 80));
+  window.setInterval(sync, 1800);
+  window.setTimeout(sync, 250);
 })();
