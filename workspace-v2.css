@@ -1,0 +1,97 @@
+/* MotoJá Workspace V2 — camada visual final para áreas autenticadas */
+:root{
+  --w-bg:#07111f;
+  --w-surface:#0f1b2d;
+  --w-surface-2:#142238;
+  --w-card:#ffffff;
+  --w-text:#f8fbff;
+  --w-ink:#0a1424;
+  --w-muted:#8fa0b8;
+  --w-line:rgba(143,160,184,.20);
+  --w-blue:#168cff;
+  --w-cyan:#16b9e8;
+  --w-green:#20d8a0;
+  --w-shadow:0 18px 50px rgba(0,0,0,.22);
+}
+
+/* Base autenticada */
+body.mj-workspace-v2{background:var(--w-bg)!important}
+body.mj-workspace-v2 .app-shell,
+body.mj-workspace-v2 .phone{background:var(--w-bg)!important}
+body.mj-workspace-v2 #appView{background:var(--w-bg);color:var(--w-text)}
+body.mj-workspace-v2 .topbar{background:linear-gradient(180deg,#091526 0%,#07111f 100%)!important;border-bottom:1px solid var(--w-line)!important;color:#fff!important;box-shadow:none!important}
+body.mj-workspace-v2 .topbar .eyebrow{color:#8292aa!important;letter-spacing:.18em!important}
+body.mj-workspace-v2 .topbar h1{color:#fff!important;font-weight:950!important}
+body.mj-workspace-v2 .topbar #logoutButton{background:#111f34!important;color:#fff!important;border:1px solid var(--w-line)!important}
+body.mj-workspace-v2 #accountBanner{background:linear-gradient(135deg,rgba(22,140,255,.16),rgba(32,216,160,.08))!important;border:1px solid rgba(55,132,255,.20)!important;color:#dbe7f7!important;box-shadow:none!important;font-weight:850!important}
+
+/* Navegação de perfis: uma única barra limpa */
+body.mj-workspace-v2 #modeSelector{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;padding:5px!important;margin:0 0 16px!important;border:1px solid rgba(143,160,184,.18)!important;border-radius:18px!important;background:#111d2f!important;box-shadow:0 10px 28px rgba(0,0,0,.16)!important}
+body.mj-workspace-v2 #modeSelector button{min-height:48px!important;padding:0 8px!important;border:0!important;border-radius:14px!important;background:transparent!important;color:#9aa9bd!important;font-size:13px!important;font-weight:850!important;box-shadow:none!important}
+body.mj-workspace-v2 #modeSelector button.active{background:linear-gradient(135deg,#177fff,#12b8dc)!important;color:#fff!important;box-shadow:0 8px 20px rgba(22,140,255,.25)!important}
+body.mj-workspace-v2 #adminReturnButton{display:none!important}
+
+/* ADMIN */
+body.mj-mode-admin #adminView{display:grid;gap:16px}
+body.mj-mode-admin #adminView>.panel-card:first-child{background:linear-gradient(145deg,#0f2037,#122c45)!important;border:1px solid rgba(75,156,255,.23)!important;color:#fff!important;box-shadow:var(--w-shadow)!important}
+body.mj-mode-admin #adminView>.panel-card:first-child h2{color:#fff!important;font-size:28px!important;margin-bottom:8px!important}
+body.mj-mode-admin #adminView>.panel-card:first-child p{color:#a9bad0!important;font-size:15px!important;line-height:1.5!important}
+body.mj-mode-admin #adminStats{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+body.mj-mode-admin #adminStats .stat-card{position:relative;min-height:128px;padding:18px!important;border:1px solid rgba(143,160,184,.17)!important;border-radius:22px!important;background:linear-gradient(145deg,#101d30,#0c1728)!important;box-shadow:0 12px 32px rgba(0,0,0,.15)!important;overflow:hidden!important}
+body.mj-mode-admin #adminStats .stat-card::after{content:"";position:absolute;width:72px;height:72px;border-radius:50%;right:-20px;bottom:-25px;background:radial-gradient(circle,rgba(22,140,255,.28),transparent 70%)}
+body.mj-mode-admin #adminStats .stat-card:nth-child(3n+2)::after{background:radial-gradient(circle,rgba(32,216,160,.24),transparent 70%)}
+body.mj-mode-admin #adminStats .stat-card span{display:block!important;color:#8495ad!important;font-size:12px!important;font-weight:900!important;letter-spacing:.07em!important;text-transform:uppercase!important}
+body.mj-mode-admin #adminStats .stat-card strong{display:block!important;margin-top:12px!important;color:#fff!important;font-size:30px!important;font-weight:950!important;letter-spacing:-.04em!important}
+body.mj-mode-admin #adminView .panel-card:not(:first-child){background:#0d192a!important;border:1px solid rgba(143,160,184,.16)!important;color:#fff!important;box-shadow:none!important}
+body.mj-mode-admin #adminView .panel-card h3{color:#fff!important}
+body.mj-mode-admin #adminView label{color:#b9c6d8!important}
+body.mj-mode-admin #adminView input,
+body.mj-mode-admin #adminView select{background:#111f33!important;border:1px solid #293952!important;color:#fff!important}
+body.mj-mode-admin #adminView .list-item{background:#101e31!important;border:1px solid #26364e!important;color:#fff!important}
+body.mj-mode-admin #adminView .list-item span,
+body.mj-mode-admin #adminView .list-item small{color:#91a1b7!important}
+
+/* PASSAGEIRO — mapa é protagonista, sem cabeçalho duplicado */
+body.mj-mode-passenger .topbar,
+body.mj-mode-passenger #accountBanner{display:none!important}
+body.mj-mode-passenger #modeSelector{position:fixed!important;z-index:1900!important;top:calc(env(safe-area-inset-top) + 12px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(calc(100vw - 28px),430px)!important;margin:0!important;padding:4px!important;border-radius:17px!important;background:rgba(7,17,31,.90)!important;border:1px solid rgba(255,255,255,.15)!important;backdrop-filter:blur(18px)!important;box-shadow:0 14px 36px rgba(0,0,0,.24)!important}
+body.mj-mode-passenger #modeSelector button{min-height:44px!important;font-size:12px!important}
+body.mj-mode-passenger #passengerView{padding-top:0!important}
+body.mj-mode-passenger #passengerRequestCard{background:rgba(255,255,255,.985)!important;color:var(--w-ink)!important;border:1px solid rgba(255,255,255,.92)!important;box-shadow:0 -18px 50px rgba(7,17,31,.24)!important}
+body.mj-mode-passenger #passengerRequestCard h2{color:var(--w-ink)!important}
+body.mj-mode-passenger #passengerRequestCard input,
+body.mj-mode-passenger #passengerRequestCard select{background:#f5f8fc!important;border-color:#d9e1eb!important;color:var(--w-ink)!important}
+body.mj-mode-passenger #requestRideButton{background:linear-gradient(100deg,#168cff,#16b9e8 52%,#20d8a0)!important;box-shadow:0 14px 28px rgba(22,140,255,.28)!important}
+
+/* MOTOCICLISTA — remove cabeçalho duplicado e deixa mapa + sheet coerentes */
+body.mj-mode-driver .topbar,
+body.mj-mode-driver #accountBanner{display:none!important}
+body.mj-mode-driver #modeSelector{position:fixed!important;z-index:1900!important;top:calc(env(safe-area-inset-top) + 12px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(calc(100vw - 28px),430px)!important;margin:0!important;padding:4px!important;border-radius:17px!important;background:rgba(7,17,31,.90)!important;border:1px solid rgba(255,255,255,.15)!important;backdrop-filter:blur(18px)!important;box-shadow:0 14px 36px rgba(0,0,0,.24)!important}
+body.mj-mode-driver #modeSelector button{min-height:44px!important;font-size:12px!important}
+body.mj-mode-driver #driverView{padding:0!important}
+body.mj-mode-driver .driver-home-shell{margin:0!important;min-height:100dvh!important;background:#dce5ee!important}
+body.mj-mode-driver .driver-home-top{top:82px!important}
+body.mj-mode-driver .driver-map-actions{top:150px!important}
+body.mj-mode-driver .driver-circle-button,
+body.mj-mode-driver .driver-earnings-pill,
+body.mj-mode-driver .driver-map-actions button{border:1px solid rgba(255,255,255,.9)!important;background:rgba(255,255,255,.96)!important;box-shadow:0 12px 30px rgba(7,17,31,.20)!important}
+body.mj-mode-driver .driver-bottom-sheet{background:rgba(255,255,255,.985)!important;box-shadow:0 -18px 50px rgba(7,17,31,.22)!important}
+body.mj-mode-driver .driver-status-copy small{color:#7b8aa0!important}
+body.mj-mode-driver .driver-status-copy strong{color:#091426!important}
+body.mj-mode-driver .driver-online-button{background:linear-gradient(135deg,#168cff,#16b9e8)!important;color:#fff!important;box-shadow:0 10px 24px rgba(22,140,255,.22)!important}
+body.mj-mode-driver .driver-online-button.online{background:linear-gradient(135deg,#12a865,#20d8a0)!important}
+body.mj-mode-driver .driver-quick-card{background:#f7f9fc!important;border-color:#e1e7ef!important}
+body.mj-mode-driver .driver-sheet-tabs{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important;overflow:visible!important}
+body.mj-mode-driver .driver-sheet-tabs button{padding:10px 6px!important;border-radius:14px!important;background:#eaf0f6!important;color:#53637a!important;font-size:12px!important}
+body.mj-mode-driver .driver-sheet-tabs button.active{background:#0b1728!important;color:#fff!important}
+
+/* Tema escuro não deve inverter o mapa/sheets de passageiro e motorista */
+body.mj-workspace-v2.ui-dark.mj-mode-passenger #passengerRequestCard,
+body.mj-workspace-v2.ui-dark.mj-mode-driver .driver-bottom-sheet{background:rgba(255,255,255,.985)!important;color:var(--w-ink)!important}
+
+@media(max-width:520px){
+  body.mj-mode-admin #appView{padding:12px!important}
+  body.mj-mode-admin #adminView>.panel-card:first-child{padding:20px!important}
+  body.mj-mode-admin #adminStats .stat-card{min-height:118px;padding:16px!important}
+  body.mj-mode-admin #adminStats .stat-card strong{font-size:26px!important}
+}
