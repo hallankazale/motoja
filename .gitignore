@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env*
+!.env.example
+.vercel/
+test-results/
+playwright-report/
+*.log
+.database-test/
+supabase/.temp/
+android/.gradle/
+android/local.properties
+ios/App/Pods/

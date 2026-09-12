@@ -1,0 +1,12 @@
+export type Role = 'passenger' | 'driver' | 'admin';
+export type RideStatus = 'requested' | 'accepted' | 'arriving' | 'arrived' | 'in_progress' | 'completed' | 'cancelled';
+export type Point = { lat: number; lng: number; label: string };
+export type Profile = { id: string; full_name: string; phone: string; role: Role; terms_version: string | null; account_status: string; is_tester: boolean };
+export type Driver = { user_id: string; approval_status: 'pending' | 'approved' | 'rejected' | 'suspended'; is_online: boolean; model: string; plate: string; color: string; pix_key: string; documents_valid_until: string | null; review_note: string | null };
+export type Ride = { id: string; passenger_id: string; driver_id: string | null; status: RideStatus; pickup: Point; destination: Point; distance_m: number; duration_s: number; price_cents: number; payment_method: 'cash' | 'pix'; payment_status: 'pending' | 'confirmed' | 'disputed'; requested_at: string; completed_at?: string; pin?: string; counterparty?: { full_name: string; phone: string }; vehicle?: { model: string; plate: string; color: string; pix_key?: string }; location?: { lat: number; lng: number; recorded_at: string }; my_rating?: number; };
+export type Quote = { id: string; distance_m: number; duration_s: number; price_cents: number; expires_at: string; geometry?: { coordinates: number[][] }; pickup: Point; destination: Point };
+export type Offer = { id: string; ride_id: string; price_cents: number; distance_m: number; duration_s: number; pickup_lat: number; pickup_lng: number; expires_at: string };
+export type DocumentItem = { id: string; user_id: string; kind: string; object_path: string; status: string; expires_on: string; created_at: string };
+export type Incident = { id: string; ride_id: string | null; category: string; description: string; status: string; created_at: string };
+export type Settings = { mode: 'closed' | 'pilot' | 'live'; city: string; support_phone: string; support_email: string; terms_version: string; base_cents: number; minimum_cents: number; per_km_cents: number; per_minute_cents: number; routing_ready: boolean; legal_ready: boolean; insurance_ready: boolean; };
+export type Snapshot = { profile: Profile; driver: Driver | null; active_ride: Ride | null; rides: Ride[]; offer: Offer | null; incidents: Incident[]; documents: DocumentItem[]; settings: Settings; admin?: { drivers: (Driver & { full_name: string; documents: DocumentItem[] })[]; incidents: Incident[]; rides: Ride[]; } };
