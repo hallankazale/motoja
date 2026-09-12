@@ -26,12 +26,12 @@
 }
 
 .auth-modal::before {
-  left: -50px;
+  left: -20px;
   top: 70px;
 }
 
 .auth-modal::after {
-  right: -70px;
+  right: 0;
   bottom: 90px;
   background: linear-gradient(90deg, transparent, #00d59b65, transparent);
 }
