@@ -1,13 +1,15 @@
-import { useEffect, useRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { ArrowRight, LoaderCircle, X, ShieldCheck } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Button({ children, busy = false, variant = 'primary', ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { busy?: boolean; variant?: 'primary' | 'secondary' | 'danger' | 'ghost' }) {
   return <button {...props} disabled={props.disabled || busy} className={`button ${variant} ${props.className || ''}`} aria-busy={busy}>{busy ? <LoaderCircle size={20} className="spin" /> : null}{children}</button>;
 }
-export function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
+export function Modal({ title, children, onClose, variant = 'default' }: { title: string; children: ReactNode; onClose: () => void; variant?: 'default' | 'auth' }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   useEffect(() => { ref.current?.showModal(); const dialog = ref.current; return () => dialog?.close(); }, []);
-  return <dialog ref={ref} className="modal" onCancel={onClose}><div className="modal-top"><h2>{title}</h2><button className="icon-button" aria-label="Fechar" onClick={onClose}><X size={22} /></button></div>{children}</dialog>;
+  return <dialog ref={ref} className={`modal ${variant === 'auth' ? 'auth-modal' : ''}`} aria-labelledby={titleId} onCancel={onClose}><div className="modal-top"><h2 id={titleId} className={variant === 'auth' ? 'sr-only' : ''}>{title}</h2><button className="icon-button" aria-label="Fechar" onClick={onClose}><X size={22} /></button></div>{children}{variant === 'auth' ? <ThemeToggle className="auth-theme-toggle" /> : null}</dialog>;
 }
 export function Notice({ children, error = false }: { children: ReactNode; error?: boolean }) { return <p className={`notice ${error ? 'error' : ''}`} role={error ? 'alert' : 'status'}>{children}</p>; }
 export function Empty({ title, children }: { title: string; children: ReactNode }) { return <div className="empty"><div className="empty-icon"><ShieldCheck size={28} /></div><h3>{title}</h3><p>{children}</p></div>; }

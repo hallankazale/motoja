@@ -71,3 +71,30 @@ test('admin sees preparation and invitations, with no public release shortcut', 
   expect(await page.getByLabel('Disponibilidade').locator('option').allTextContents()).toEqual(['Fechado — em preparação', 'Piloto — apenas convidados']);
   await noOverflow(page);
 });
+
+test('reference login supports password visibility and remembers the selected appearance', async ({ page }, testInfo) => {
+  await prepare(page);
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Sua conta MotoJá' });
+  await expect(dialog.getByRole('heading', { name: 'Bem-vindo de volta!' })).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await dialog.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('entrada-escura.png'), fullPage: true });
+  const password = dialog.locator('input[name="password"]');
+  await expect(password).toHaveAttribute('type', 'password');
+  await dialog.getByRole('button', { name: 'Mostrar senha', exact: true }).click();
+  await expect(password).toHaveAttribute('type', 'text');
+  await dialog.getByRole('button', { name: 'Ocultar senha', exact: true }).click();
+  await expect(password).toHaveAttribute('type', 'password');
+  await dialog.getByRole('button', { name: 'Ativar tema claro', exact: true }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Criar conta', exact: true }).click();
+  await expect(dialog.getByLabel('Nome completo', { exact: true })).toBeVisible();
+  expect(await dialog.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+  await dialog.getByRole('button', { name: 'Voltar para entrar', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Esqueci minha senha', exact: true }).click();
+  await expect(dialog.getByRole('heading', { name: 'Vamos recuperar seu acesso.' })).toBeVisible();
+});
