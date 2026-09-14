@@ -1,0 +1,22 @@
+.mfa-setup, .mfa-setup form, .mfa-option-content { min-width: 0; }
+.mfa-option {
+  border: 1px solid var(--border, #37465e);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.mfa-option summary {
+  padding: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.mfa-option summary:focus-visible {
+  outline: 3px solid #0b9fff;
+  outline-offset: -4px;
+}
+.mfa-option[open] summary { border-bottom: 1px solid var(--border, #37465e); }
+.mfa-option-content { padding: 16px; }
+.mfa-instructions { margin: 0; padding-left: 22px; line-height: 1.65; }
+.mfa-instructions li + li { margin-top: 8px; }
+.mfa-secret { font-family: ui-monospace, monospace; letter-spacing: 0.06em; font-size: 16px; }
+.mfa-setup .mfa-qr { display: block; width: min(100%, 240px); height: auto; margin: 16px auto 0; }

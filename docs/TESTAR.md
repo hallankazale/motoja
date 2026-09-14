@@ -1,6 +1,17 @@
 # Preparar o teste entre dois celulares
 
-Estado de referência: 13/09/2026. A aplicação está publicada; a operação permanece fechada. Este roteiro não declara mapas, entrega de e-mail ou transporte real como já homologados.
+Estado de referência: 14/09/2026. A aplicação está publicada; a operação permanece fechada. Este roteiro não declara mapas, entrega de e-mail ou transporte real como já homologados.
+
+## Retomada acordada em 14/09
+
+- Hallan decidiu manter MotoJá como nome provisório e adiar a configuração de e-mail. A disponibilidade da marca não está confirmada.
+- As capturas do titular mostram `GEOAPIFY_API_KEY` e `MAPS_PROVIDER` salvos; o Site URL foi conferido e o titular confirmou a inclusão dos dois Redirect URLs da Vercel. Isso não comprova uma consulta real ao provedor.
+- A verificação do banco encontrou uma conta administrativa ativa sem fator MFA verificado, dois condutores pendentes, nenhum documento e nenhum participante convidado.
+- Próxima etapa sem SMTP: entrar com a conta administrativa existente, configurar o autenticador e abrir **Gestão/Administração → Operação → Verificar integrações**. A confirmação e recuperação de e-mail continuam pendentes; nenhuma regra de acesso foi desativada.
+- No mesmo celular, toque em **Configurar ou confirmar acesso → Configurar no mesmo celular → Copiar chave**. No autenticador, adicione uma conta por chave, com tipo baseado no tempo. Volte ao MotoJá e informe o código de seis números. O QR code continua disponível para outro aparelho.
+- A chave aparece apenas durante a configuração. Não envie a chave, o QR code ou os códigos do autenticador em mensagens ou capturas. Se a cópia automática não funcionar, selecione e copie a chave manualmente.
+
+A alteração de MFA fica em `src/features/Mfa.tsx` e `src/styles/mfa.css`, carregados sob demanda. Usa o cliente Supabase já instalado, sem dependência adicional. Os testes de `tests/e2e/mfa.spec.ts` cobrem configuração no mesmo celular, falha da área de transferência, código inválido e nova tentativa, reutilização de fator verificado e preservação de fatores de outros aplicativos. Auth é interceptado com dados sintéticos; a confirmação real permanece a cargo do titular.
 
 ## O que está pronto no código
 

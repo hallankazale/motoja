@@ -16,7 +16,7 @@ const RideReceipt = lazy(() => import('./features/ActiveRide').then(module => ({
 const Safety = lazy(() => import('./features/Safety').then(module => ({ default: module.Safety })));
 const Terms = lazy(() => import('./features/Safety').then(module => ({ default: module.Terms })));
 const Account = lazy(() => import('./features/Account').then(module => ({ default: module.Account })));
-const Mfa = lazy(() => import('./features/Account').then(module => ({ default: module.Mfa })));
+const Mfa = lazy(() => import('./features/Mfa').then(module => ({ default: module.Mfa })));
 const Admin = lazy(() => import('./features/Admin').then(module => ({ default: module.Admin })));
 
 type View = 'home' | 'history' | 'safety' | 'account' | 'admin';
