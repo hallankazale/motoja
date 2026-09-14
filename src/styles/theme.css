@@ -1,0 +1,63 @@
+/* Semantic colors keep the same hierarchy across booking, driving and administration. */
+
+:root {
+  color-scheme: dark;
+  --canvas: #040e20;
+  --canvas-gradient: radial-gradient(ellipse at 78% 0%, #102e644f, transparent 58%), radial-gradient(ellipse at 0% 100%, #008b7330, transparent 48%);
+  --surface: #0c192e;
+  --surface-raised: #11233d;
+  --surface-soft: #112643;
+  --chrome: #071326e8;
+  --text: #f6f9ff;
+  --muted: #adbbd0;
+  --blue: #65b6ff;
+  --navy: var(--text);
+  --border: #263b57;
+  --green: #1fe2ac;
+  --soft-blue: #113054;
+  --positive-bg: #0b302f;
+  --positive-border: #1a6657;
+  --danger: #ffabb6;
+  --danger-bg: #371c2c;
+  --danger-border: #763147;
+  --input-bg: #e9f0ff;
+  --input-text: #101c31;
+  --input-muted: #576984;
+  --input-border: #d1def3;
+  --action-gradient: linear-gradient(105deg, #1269d5 0%, #087b9a 55%, #008267 100%);
+  --auth-action-gradient: linear-gradient(100deg, #0879ef 0%, #0792af 52%, #009775 100%);
+  --brand-green: #06d49a;
+  --auth-bg: #030c1c;
+  --auth-gradient: radial-gradient(ellipse at 28% 0%, #10307b85, transparent 56%), radial-gradient(ellipse at 0% 100%, #005e4a55, transparent 58%);
+  --card-shadow: 0 12px 40px #0000001c;
+  --radius: 22px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --canvas: #f2f6fc;
+  --canvas-gradient: radial-gradient(ellipse at 75% 0%, #cce2ff75, transparent 60%), radial-gradient(ellipse at 0% 100%, #cbf5e650, transparent 48%);
+  --surface: #ffffff;
+  --surface-raised: #eef4fc;
+  --surface-soft: #e9f1fc;
+  --chrome: #fffffff0;
+  --text: #11213a;
+  --muted: #506480;
+  --blue: #1165bf;
+  --border: #d4e0f0;
+  --green: #087554;
+  --soft-blue: #e5f1ff;
+  --positive-bg: #e3f5ee;
+  --positive-border: #98d3bd;
+  --danger: #a62342;
+  --danger-bg: #fff0f2;
+  --danger-border: #eec0cb;
+  --input-bg: #edf3ff;
+  --input-text: #101c31;
+  --input-muted: #576984;
+  --input-border: #cbdaf0;
+  --brand-green: #008d66;
+  --auth-bg: #f4f8ff;
+  --auth-gradient: radial-gradient(ellipse at 25% 0%, #c7ddff9c, transparent 60%), radial-gradient(ellipse at 0% 100%, #b5f7e35e, transparent 58%);
+  --card-shadow: 0 10px 35px #1832580a;
+}
