@@ -69,7 +69,7 @@ async function prepareMfa(page: Page, options: { enrolled?: boolean; clipboardBl
     if (path.startsWith('/auth/v1/factors/') && request.method() === 'DELETE') {
       const removedId = path.split('/').at(-1)!;
       state.removed.push(removedId);
-      if (options.cleanupFails) return route.fulfill({ status: 400, json: { code: 'mfa_factor_not_found', msg: 'Synthetic cleanup failure' } });
+      if (options.cleanupFails) return route.fulfill({ status: 400, json: { error_code: 'mfa_factor_not_found', msg: 'Synthetic cleanup failure' } });
       factors = factors.filter(factor => factor.id !== removedId);
       return route.fulfill({ json: { id: removedId } });
     }
@@ -90,7 +90,9 @@ async function prepareMfa(page: Page, options: { enrolled?: boolean; clipboardBl
     if (path === '/auth/v1/factors/' + factorId + '/verify') {
       state.verifications++;
       if (request.postDataJSON()?.code !== '123456') return route.fulfill({
-        status: 422, json: { code: 'mfa_verification_failed', msg: 'Invalid TOTP code' },
+        // Auth uses `code` only when the response declares the API version.
+        status: 422, headers: { 'X-Supabase-Api-Version': '2024-01-01' },
+        json: { code: 'mfa_verification_failed', msg: 'Invalid TOTP code' },
       });
       state.verified = true;
       factors = factors.map(factor => factor.id === factorId ? { ...factor, status: 'verified' } : factor);
