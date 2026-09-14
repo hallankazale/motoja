@@ -90,9 +90,8 @@ async function prepareMfa(page: Page, options: { enrolled?: boolean; clipboardBl
     if (path === '/auth/v1/factors/' + factorId + '/verify') {
       state.verifications++;
       if (request.postDataJSON()?.code !== '123456') return route.fulfill({
-        // Auth uses `code` only when the response declares the API version.
-        status: 422, headers: { 'X-Supabase-Api-Version': '2024-01-01' },
-        json: { code: 'mfa_verification_failed', msg: 'Invalid TOTP code' },
+        // Use the supported legacy body; this cross-origin fixture does not expose an API version header.
+        status: 422, json: { error_code: 'mfa_verification_failed', msg: 'Invalid TOTP code' },
       });
       state.verified = true;
       factors = factors.map(factor => factor.id === factorId ? { ...factor, status: 'verified' } : factor);
