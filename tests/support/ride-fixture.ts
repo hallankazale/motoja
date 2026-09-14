@@ -34,13 +34,22 @@ export async function createRideFixture({ loseFirstRequest = false, mapsUnavaila
     db,
     async install(page: Page, role: keyof typeof users) {
       const user = { id: users[role], email: `${role}@example.invalid`, aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() };
-      await page.context().grantPermissions(['geolocation']);
-      await page.context().setGeolocation({ latitude: points.pickup.lat, longitude: points.pickup.lng, accuracy: 10 });
-      await page.addInitScript(({ user }) => {
+      await page.addInitScript(({ user, pickup }) => {
         const expires = Math.floor(Date.now() / 1000) + 3600;
         const payload = btoa(JSON.stringify({ sub: user.id, role: 'authenticated', exp: expires }));
         localStorage.setItem('motoja-v2-auth', JSON.stringify({ access_token: `eyJhbGciOiJIUzI1NiJ9.${payload}.test-only`, refresh_token: 'test-only', expires_at: expires, expires_in: 3600, token_type: 'bearer', user }));
-      }, { user });
+        // GPS is an explicit fixture. The WebKit 26.6 runner's native emulation
+        // supplied a timestamp 1000x too large; use the standard millisecond clock.
+        const position = () => ({ timestamp: Date.now(), coords: { latitude: pickup.lat, longitude: pickup.lng, accuracy: 10, altitude: null, altitudeAccuracy: null, heading: null, speed: null } });
+        Object.defineProperty(navigator, 'geolocation', { configurable: true, value: {
+          getCurrentPosition: (success: (value: ReturnType<typeof position>) => void) => { setTimeout(() => success(position()), 0); },
+          watchPosition: (success: (value: ReturnType<typeof position>) => void) => {
+            setTimeout(() => success(position()), 0);
+            return setInterval(() => success(position()), 1000);
+          },
+          clearWatch: (id: number) => clearInterval(id),
+        } });
+      }, { user, pickup: points.pickup });
       // Keep realtime traffic inside the fixture; the app's polling reconciles SQL state.
       await page.routeWebSocket(/^wss:\/\/[^/]+\.supabase\.co\//, () => {});
       await page.route('**/*.supabase.co/**', async route => {

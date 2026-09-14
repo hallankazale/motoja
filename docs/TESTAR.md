@@ -69,6 +69,8 @@ npm run test:e2e
 - Interface com banco real isolado: passageiro e motorista em sessões diferentes, perda da primeira resposta, pedido sem duplicação, PIN errado/correto, conclusão, recebimento e avaliação. Auth, GPS e resposta externa do mapa são fixtures explícitas, não uma prova de integração hospedada.
 - Não executado sem credenciais: consulta real Geoapify, entrega de e-mail e ciclo em dois aparelhos físicos.
 
+O diagnóstico Supabase de 14/09 ainda aponta [proteção contra senhas vazadas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection); verificar disponibilidade no plano e ativar pela configuração de Auth. Os avisos informativos de [RLS sem políticas](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) referem-se às tabelas privadas, com acesso direto negado e operações mediadas pelas funções autorizadas. Não adicionar políticas públicas só para remover esse aviso.
+
 ## Estrutura e escolhas
 
 - `supabase/functions/_shared/maps.ts`: adaptadores do fornecedor, validação e limites de resposta; sem dependência nova.
