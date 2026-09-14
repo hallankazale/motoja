@@ -6,6 +6,8 @@ Aplicativo de corridas de moto para passageiros, motociclistas e administração
 
 **Situação: em preparação, com corridas públicas bloqueadas.** Existe implementação real dos fluxos e do banco; ainda não é uma operação comercial pronta nem um aplicativo publicado nas lojas. Mapas de fundo funcionam; busca de endereços e cálculo de rota dependem de um provedor configurado. Não há motoristas, avaliações, viagens ou pagamentos fictícios no aplicativo.
 
+Veja o roteiro atual de configuração e teste em [docs/TESTAR.md](docs/TESTAR.md).
+
 ## O que foi implementado
 
 | Área | Recursos |

@@ -2688,3 +2688,13 @@ td:first-child {
     font-size: 1.35rem;
   }
 }
+
+.pilot-readiness { margin-bottom: 24px; }
+.integration-list { list-style: none; padding: 0; margin: 22px 0 0; }
+.integration-list li { display: flex; align-items: flex-start; gap: 12px; padding: 18px 0; border-top: 1px solid var(--border); }
+.integration-list li > svg { flex-shrink: 0; margin-top: 3px; }
+.integration-list li > div { flex: 1; min-width: 0; }
+.integration-list li p { margin: 5px 0 0; font-size: .875rem; color: var(--muted); }
+.integration-ok { color: var(--green); }
+.integration-pending { color: var(--blue); }
+@media (max-width: 480px) { .integration-list li { flex-wrap: wrap; } .integration-list .small-tag { margin-left: 34px; } }

@@ -8,6 +8,8 @@ A aplicação e o banco foram implantados, mas `settings.mode = closed`. Nenhum 
 
 O piloto por convite é um modo técnico para homologação controlada. Não constitui dispensa de autorização, seguro, obrigações de transporte ou proteção de dados. A ausência desses requisitos impede o uso comercial e testes com transporte real onde a exigência se aplicar.
 
+Atualização de 13/09: veja [TESTAR.md](TESTAR.md) para a integração Geoapify, o diagnóstico administrativo e a configuração assistida de Auth/SMTP. A confirmação automática de e-mail encontrada na conta precisa ser revisada com um SMTP funcional.
+
 ## Serviços que faltam configurar
 
 1. **Mapas/rotas:** endpoints HTTPS Nominatim-compatible e OSRM-compatible contratados ou próprios. Definir `GEOCODER_BASE_URL`, `ROUTER_BASE_URL` e, se exigido, `MAPS_PROVIDER_TOKEN` como secrets da Edge Function. O provedor deve suportar cobertura e restrições apropriadas para motos em Campo Verde. Validar rotas reais e acessos proibidos; uma rota do perfil `driving` não garante legalidade para toda motocicleta.

@@ -10,7 +10,8 @@
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:db": "node scripts/test-database.mjs && node scripts/test-database.mjs --legacy",
     "test:e2e": "playwright test",
-    "native:sync": "npm run build && cap sync"
+    "native:sync": "npm run build && cap sync",
+    "configure:pilot": "node scripts/configure-pilot.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

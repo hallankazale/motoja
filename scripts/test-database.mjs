@@ -1,35 +1,10 @@
-import { PGlite } from '@electric-sql/pglite';
-import { readFile, readdir } from 'node:fs/promises';
+import { createTestDatabase } from './lib/test-database.mjs';
 import assert from 'node:assert/strict';
 process.on('uncaughtException', error => { console.error(JSON.stringify({ message: error.message, detail: error.detail, where: error.where, position: error.position })); process.exit(1); });
 
 // Real PostgreSQL semantics in an isolated WASM database; no production users or trips are modified.
-const db = new PGlite();
 const legacyFixture = process.argv.includes('--legacy');
-await db.exec(`
- create role anon; create role authenticated; create role service_role bypassrls;
- create schema auth; create schema storage;
- grant usage on schema auth,storage to anon,authenticated,service_role;
- create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claims',true)::jsonb->>'sub','')::uuid; $$;
- create function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims',true),''),'{}')::jsonb; $$;
- create table auth.users(id uuid primary key,raw_user_meta_data jsonb default '{}',email_confirmed_at timestamptz,phone_confirmed_at timestamptz);
- create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
- create table storage.objects(id uuid default gen_random_uuid(),bucket_id text,name text,metadata jsonb);
- alter table storage.objects enable row level security;
- grant select,insert,delete on storage.objects to authenticated;
- create function storage.foldername(name text) returns text[] language sql immutable as $$ select (string_to_array(name,'/'))[1:array_length(string_to_array(name,'/'),1)-1]; $$;
- create function storage.extension(name text) returns text language sql immutable as $$ select reverse(split_part(reverse(name),'.',1)); $$;
-`);
-if (legacyFixture) await db.exec(`
- create table public.profiles(id uuid,full_name text,phone text,role text,account_status text);
- create table public.rides(id uuid default gen_random_uuid(),status text);
- insert into public.rides(status) values('completed'),('cancelled');
- grant all on public.rides to anon,authenticated;
- create function public.legacy_test() returns integer language sql security definer as $$ select 1; $$;
- grant execute on function public.legacy_test() to public,anon,authenticated;
-`);
-const files = (await readdir(new URL('../supabase/migrations/', import.meta.url))).filter(file => file.endsWith('.sql')).sort();
-for (const file of files) await db.exec(await readFile(new URL(`../supabase/migrations/${file}`, import.meta.url), 'utf8'));
+const db = await createTestDatabase({ legacyFixture });
 console.log(`PASS: migrations apply to ${legacyFixture ? 'an existing legacy' : 'a fresh'} PostgreSQL database`);
 
 const users = { passenger: '10000000-0000-4000-8000-000000000001', passenger2: '10000000-0000-4000-8000-000000000002', driver: '20000000-0000-4000-8000-000000000001', driver2: '20000000-0000-4000-8000-000000000002', admin: '30000000-0000-4000-8000-000000000001' };
@@ -170,6 +145,17 @@ try {
   await assert.rejects(cmd(users.passenger2,'request_ride',payload),/convidados/);
   await db.exec(`update motoja_private.settings set mode='closed'`);
   await assert.rejects(cmd(users.passenger2,'request_ride',payload),/preparação/);
+ });
+ await test('maps require an invited account during preparation and are never callable by clients',async()=>{
+  await assert.rejects(as(users.passenger,'select public.mj_maps_access($1)',[users.passenger]),/permission denied/);
+  await db.query('update motoja_private.profiles set is_tester=false where id=$1',[users.passenger2]);
+  await assert.rejects(as(null,'select public.mj_maps_access($1)',[users.passenger2],'aal1','service_role'),/piloto/);
+  await as(null,'select public.mj_maps_access($1)',[users.passenger],'aal1','service_role');
+ });
+ await test('map provider has a global daily ceiling across accounts',async()=>{
+  await db.exec("update motoja_private.rate_limits set hits=599 where bucket='maps:global:day'");
+  await as(null,'select public.mj_maps_access($1)',[users.passenger],'aal1','service_role');
+  await assert.rejects(as(null,'select public.mj_maps_access($1)',[users.admin],'aal1','service_role'),/limite|Limite|Aguarde/);
  });
  await test('all private tables have RLS and no anonymous table grants',async()=>{
   const insecure=await db.query(`select c.relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='motoja_private' and c.relkind='r' and not c.relrowsecurity`);assert.equal(insecure.rows.length,0);

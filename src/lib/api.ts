@@ -32,7 +32,7 @@ export async function locationService<T>(action: string, payload: Record<string,
   }
   return data as T;
 }
-export const searchPlaces = (query: string) => locationService<{ results: Point[] }>('search', { query });
+export const searchPlaces = (query: string) => locationService<{ results: Point[]; provider?: string }>('search', { query });
 export const createQuote = (pickup: Point, destination: Point) => locationService<Quote>('quote', { pickup, destination });
 
 export async function uploadDocument(file: File, kind: string, expiresOn: string): Promise<void> {
@@ -46,4 +46,15 @@ export async function uploadDocument(file: File, kind: string, expiresOn: string
   if (error) throw new Error('Não foi possível enviar o documento. Tente novamente.');
   try { await command('submit_document', { kind, object_path: path, expires_on: expiresOn }); }
   catch (error) { await supabase.storage.from('motoja-documents').remove([path]); throw error; }
+}
+
+export type IntegrationStatus = { maps: { provider: string; search_configured: boolean; routing_configured: boolean }; emailConfirmation: boolean };
+export async function getIntegrationStatus(): Promise<IntegrationStatus> {
+  const [maps, response] = await Promise.all([
+    locationService<IntegrationStatus['maps']>('health', {}),
+    fetch(`${supabaseUrl}/auth/v1/settings`, { headers: { apikey: publishableKey }, signal: AbortSignal.timeout(12000), cache: 'no-store' }),
+  ]);
+  if (!response.ok) throw new Error('Não foi possível conferir a configuração de acesso. Tente novamente.');
+  const settings = await response.json();
+  return { maps, emailConfirmation: settings.external?.email === true && settings.mailer_autoconfirm === false };
 }
